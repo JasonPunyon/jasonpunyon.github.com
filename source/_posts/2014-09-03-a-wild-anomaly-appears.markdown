@@ -6,24 +6,24 @@ comments: true
 categories: ml
 ---
 
-So, I'm working on the new Data Team at Stack Exchange now. Truth is we have no idea what we're doing ([wanna join us?](http://careers.stackoverflow.com/jobs/62161/data-science-engineer-stack-exchange)). But every now and then we come across something that works a little too well and wonder why we haven't heard about it before.
+So, I'm working on the new Data Team at [Stack Exchange](http://stackexchange.com) now. Truth is we have no idea what we're doing ([WANNA JOIN US?](http://careers.stackoverflow.com/jobs/62161/data-science-engineer-stack-exchange)). But every now and then we come across something that works a little too well and wonder why we haven't heard about it before.
 
-We run a niche job board for programmers that has about 2900 jobs on it this morning. Quality has been pretty easy to maintain. We have a great spam filter called "The $350 Price Tag". Then we have some humans that look over the jobs that get posted looking for problems. Overall the system works well, but at 2900 jobs a month that means someone has to look through about 150 jobs every working day. They're looking for a needle in a haystack as most (>95%) of the jobs posted are perfectly appropriate for the board, so there's a lot of "wasted" time spent looking for ghosts that aren't there. And it's pretty boring to boot. I'm sure that person would rather do other things with their time.
+We run a [niche job board for programmers](http://careers.stackoverflow.com/jobs) that has about 2900 jobs on it this morning. Quality has been pretty easy to maintain. We have a great spam filter called "The $350 Price Tag". Then we have some humans that look over the jobs that get posted looking for problems. Overall the system works well, but at 2900 jobs a month that means someone has to look through about 150 jobs every working day. They're looking for a needle in a haystack as most (>95%) of the jobs posted are perfectly appropriate for the board, so there's a lot of "wasted" time spent looking for ghosts that aren't there. And it's pretty boring to boot. I'm sure that person would rather do other things with their time.
 
 It'd be nice if we had an automated way of dealing with this. We have no idea what we're doing, so we frequently just reach into the bag of tricks, pull one out and try it on a problem. I'd done that a few times before on this problem, trying Naive Bayes or Regularized Logistic Regression, but had gotten nowhere. There are a lot of different ways a job can be appropriate for the board and there are a lot of different ways a job could be not appropriate for the board so coming up with a representative training set was difficult.
 
-Last week while taking another whack at the problem I Googled "Text Anomaly" and came across David Guthrie's 186 page Ph. D. thesis called "Unsupervised Detection of Anomalous Text". There's a lot there, but the novel idea was simple enough (and it worked in his experiments and mine) that I'm surprised I haven't heard about it until now.
+Last week while taking another whack at the problem I Googled "Text Anomaly" and came across David Guthrie's 186 page Ph. D. thesis, [Unsupervised Detection of Anomalous Text](http://nlp.shef.ac.uk/Completed_PhD_Projects/guthrie.pdf). There's a lot there, but the novel idea was simple enough (and it worked in his experiments and mine) that I'm surprised I haven't heard about it until now.
 
 ###Distance to the Textual Complement
 
-Say you have a bunch of documents. You pull one out and want to determine how anomalous it is. Here's what you do:
+Say you have a bunch of documents. You pull one out and want to determine how anomalous it is with respect to all the others. Here's what you do:
 
 1. Choose some features to characterize the document in question.
 2. Convert the document to its feature representation.
 3. Treat all the other documents as one giant document and convert that to its feature representation.
 4. Calculate the distance between the two.
 
-Do this for every document and sort the results descending by distance calculated in step 4. The documents at the top of the list are the "most anomalous".
+Do this for every document and sort the results descending by the distance calculated in step 4. The documents at the top of the list are the "most anomalous".
 
 That's it. Pretty simple to understand and implement. There are two choices to make: which features, and which distance metric to use.
 
@@ -41,7 +41,7 @@ Guthrie pits a bunch of distance metrics against eachother and for Distance to t
 
 So when I've been looking through the jobs before I can pretty much tell by their titles whether they're busted or not. So my documents were just the job titles. There isn't really a good reference corpus from which to build the Top-N word lists, so I just used the job titles themselves.
 
-<a href="http://i.imgur.com/pPAzytM.png"><img src="http://i.imgur.com/pPAzytM.png" /></a>
+<a href="http://i.imgur.com/UxtpK5K.png"><img src="http://i.imgur.com/UxtpK5K.png" /></a>
 
 #Results
 
@@ -84,7 +84,7 @@ Anywhere you see the title for a job on Stack Overflow or Careers we also show y
 1. Technical Expert Chennai 
 1. Technical Expert Gurgaon 
 1. New York Solutions Architect
-1. Sr Fullstack Eng Neeed for Cargurus we reach over 10MM unique visitors monthly
+1. Sr Fullstack Eng needed for Cargurus We reach over 10MM unique visitors monthly
 1. Sr. Tester, Sky News, West London
 1. Chief Information Officer/CIO Audible.com
 1. Machine Learning Engineer Part Time Remote Working Available
@@ -98,10 +98,12 @@ So a number of false positives are produced:
 1. Angularjs + .NET + You
 1. Android Devloper 100% Boredom Free Zone
 1. Java Developer 100% Boredom Free Zone
+1. DevOps Engineer - Winner, Hottest DC Startups!!! $10M Series A
+1. Jr. Engineer at Drizly
 
-Some of these are just infrequently found (computer vision, Mac OSX) on our board. Some of these people are trying to be unique and stand out
+Some of these are just infrequently found (computer vision, Mac OSX) on our board. Some of these people are trying to be unique and stand out.
 
-Guthrie goes into a bit of detail about this in a section on precision and recall in the paper. The conclusion is that this kind of anomaly detection is particularly suited to where you have a human layer of detectors as the last line of defense and want to reduce the work they have to do. An exhaustive exploration of the scores finds that all of the jobs we need to follow up on are in the top 10% when ordered by their anomaly scores. So setting that threshold should cut the job our humans have to do by 90%, making them happier and less bored, and improving the quality of the job board.
+Guthrie goes into a bit of detail about this in a section on precision and recall in the paper. His conclusion is that this kind of anomaly detection is particularly suited to where you have a human layer of detectors as the last line of defense and want to reduce the work they have to do. An exhaustive exploration of the scores finds that all of the jobs we need to follow up on are in the top 10% when ordered by their anomaly scores. So setting that threshold should cut the job our humans have to do by 90%, making them happier and less bored, and improving the quality of the job board.
 
 
 

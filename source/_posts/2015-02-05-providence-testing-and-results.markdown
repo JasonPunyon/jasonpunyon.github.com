@@ -46,22 +46,22 @@ By the end, we were able to get through about a test per week. By the luck o’ 
 
 ##Results
 
-The Value function performs pretty admirably in comparison to the geography based targeting we were using before. We saw ~27% lift. 
+The Value Function performs pretty admirably in comparison to the geography based targeting we were using before. We saw ~27% lift. 
 
 Looking at CTR improvement by geography, we found that jobs closer to the user improved less, confirming our previous experiments that geography is pretty important. Inside 60 miles we saw ~17% lift picking jobs using Value Function. Outside 60 miles we saw even larger gains.
 
 {% img center http://i.imgur.com/u1orDz3.png %}
 
-Looking jobs by some popular dev kinds we saw the following gains:
+Looking at jobs by some popular dev kinds we saw the following gains:
 
 {% img center http://i.imgur.com/GkLcbZI.png %}
 
 It wasn’t all kitten whispers and tickle fights. Desktop OSX jobs lost about 6% of their clicks, but we only had 9 of those jobs in the test. Similarly, SharePoint Integration jobs lost 100% of their clicks in the test, but there were only 3 of those jobs. I guess we’ll just have to live with those terrible blemishes for now.
 
-Looking at a jobs with a smattering of popular tags we saw these gains:
+Looking at jobs with a smattering of popular tags we saw these gains:
 
 {% img center http://i.imgur.com/sE3x6Bl.png %}
 
 Node really stands out there (I think we just got lucky), but we were pretty happy with all those gains. We didn’t find any losers among tags used on more than 50 jobs.
 
-*Next up: The Architecture of Providence*
+*Next up: [The Architecture of Providence](http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/)*

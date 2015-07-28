@@ -10,6 +10,8 @@ One of the awesome benefits of working at Stack Overflow is the Conferences and 
 
 This year I went to the [International Conference on Machine Learning](http://icml.cc/2015/) in Lille, France. ICML is an academic conference broken up into three parts: 1 day of tutorials, 3 days of "The Main Conference", and 2 days of Workshops.
 
+**TL;DR**: I loved the tutorials, the keynotes, and the workshops. The paper sessions were hit-or-miss but I might've been doing it wrong (sorry, I'm new to the job). It was a great conference, I'm gonna go to the one next year.
+
 ##The Tutorials
 The tutorials were my favorite part of the conference. I wish the whole conference were tutorials like the ones I went to on this first day. There were three two-hour-long sessions that started at the surface and tried to dive somewhat deeply into their respective topics.
 

@@ -10,7 +10,7 @@ One of the awesome benefits of working at Stack Overflow is the Conferences and 
 
 This year I went to the [International Conference on Machine Learning](http://icml.cc/2015/) in Lille, France. ICML is an academic conference broken up into three parts: 1 day of tutorials, 3 days of "The Main Conference", and 2 days of Workshops.
 
-**TL;DR**: I loved the tutorials, the keynotes, and the workshops. The paper sessions were hit-or-miss but I might've been doing it wrong (sorry, I'm new to the job). It was a great conference, I'm gonna go to the one next year.
+**TL;DR**: I loved the tutorials, the keynotes, and the workshops. The paper sessions were hit-or-miss but I might've been doing it wrong (sorry, I'm new to the job). It was a great conference, I'm gonna go again next year.
 
 ##The Tutorials
 The tutorials were my favorite part of the conference. I wish the whole conference were tutorials like the ones I went to on this first day. There were three two-hour-long sessions that started at the surface and tried to dive somewhat deeply into their respective topics.
@@ -36,13 +36,13 @@ Susan Murphy's "Learning Treatment Policies in Mobile Health" was an interesting
 
 Jon Kleinberg's "Social Phenomena in Global Networks" talked about how we're recording social activity more granularly than ever and insights that can be gleaned from looking at a person's network neighborhood in a social graph and the interactions the person has with their network over time. He discussed the different features to extract from the graph in order to solve the problem of identifying a person's romantic partner.
 
-####Leon Bottou - 2 High-Stakes Challenges in Machine Learning
+####Two High-Stakes Challenges in Machine Learning
 
 Both of those were super interesting but they were eclipsed by Leon Bottou's talk on [two high-stakes challenges in machine learning](http://icml.cc/2015/invited/LeonBottouICML2015.pdf). The first challenge is that machine learning components are fundamentally different from the things we're used to in software engineering. ML components aren't rigid like sorting routines, they're squishy. The guarantees they provide are weak. If the training set data distribution is different from the data distribution in situ for any reason, all your guarantees go out the window. Your component just ambles around drunkenly in an alien world grasping for vestiges of the only reality it knows.
 
 "AHA!" you think. "I ain't no fool. We won't fall victim to the data distribution drift problem with statically trained models because we won't use 'em! We'll learn *online*!" I, for one, greatly admire the bold leadership it takes to suggest that we actually fight fire with fire. Some would say "Maybe we've got enough learning," but you say "Maybe we haven't got enough learning enough!" I like you.
 
-The problem with learning online is that you've created an even shakier foundation for your engineering division, because feedback loops are *everywhere*. If your organization has more than one online learning ML algorithm in a particular pipeline you've got a system where one piece can learn from another piece that is learning from the first piece. These feedback loops can manifest themselves at 2 online algorithms in the pipeline, imagine what happens when you're trying to learn online in many places across a large engineering organization.
+The problem with learning online is that you've created an even shakier foundation for your engineering division, because feedback loops are *everywhere*. If your organization has more than one online learning ML algorithm in a particular pipeline you've got a system where one piece can learn from another piece that is learning from the first piece. These feedback loops can manifest themselves at two online algorithms in the pipeline, imagine what happens when you're trying to learn online in many places across a large engineering organization.
 
 The second challenge is that the experimental paradigm that has driven machine learning forward over the last few decades is reaching its limits. Machine learning has a single experimental paradigm: split up the data into a test set and training/validation sets, train on the training/validation sets, and test final performance on the test set. Machine learning is an outlier among experimental sciences in that it has a single paradigm. Other sciences have to work much harder to design their experiments and interpret their results.
 
@@ -50,7 +50,7 @@ One of the problems with this single paradigm and its focus on datasets is that 
 
 {% img http://i.imgur.com/KgOfZGh.png %}
 
-And while we're at it, we aren't even learning the right things if we want to acheive the goals of our increased ambitions. Our solution to classifying is statistical classification. But it's hard to find a purely statistical basis in which to ground some problems like the one brought up in this slide...
+And while we're at it, we aren't even learning the right things if we want to acheive the heights of our increased ambitions. Our solution to classifying is statistical classification. But it's hard to find a purely statistical basis in which to ground some problems like the one brought up in this slide...
 
 {% img http://i.imgur.com/v6FUATk.png %}
 
@@ -62,7 +62,7 @@ Paper sessions were scheduled around the keynotes. Each session had a topic, som
 
 This ended up being pretty grueling by the end of the third day. There wasn't really time to just think about any of the things that were presented to you. Trying to put together the-problem-you-didn't-even-know-was-a-problem-3-minutes-ago and the research-at-the-edge-of-human-understanding that was just presented as the solution to that problem was a difficult process to repeat 3 times an hour, 6 hours a day, for 3 days. That's not to mention synthesizing the information from the day's keynote, and the poster sessions. These were long days. Jet lag wasn't helping either.
 
-At any time there were 6 paper sessions going on, so my strategy was to just pick the topic that I was most interested in. This was a bit of a high variance strategy as the sessions had a hit-or-miss quality to them. Other people used a more informed strategy of picking specific papers/presenters they knew to be good and then chose their sessions based on that. There's no "Map of the Machine Learning Stars" to consult though... my lack of familiarity with a lot of the field precludes that kind of strategy. Maybe when I've been around a bit longer I'll have a better handle on that kind of thing.
+At any time there were 6 paper sessions going on, so my strategy was to just pick the topic that I was most interested in. This was a bit of a high variance strategy as the sessions had a hit-or-miss quality to them. Other people used a more informed strategy of picking specific papers/presenters they knew to be good and then chose their sessions based on that. There's no "Map of the Machine Learning Stars" to consult though...my lack of familiarity with a lot of the field precludes that kind of strategy. Maybe when I've been around a bit longer I'll have a better handle on that kind of thing.
 
 ##The Workshops
 

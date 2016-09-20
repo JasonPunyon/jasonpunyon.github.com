@@ -68,7 +68,7 @@ At any time there were 6 paper sessions going on, so my strategy was to just pic
 
 The final piece of the conference was the workshops. These were little mini-conferences organized by groups repesenting subfields of machine learning. I was happy to attend the 2-day workshop on the latest in Deep Learning. Invited speakers gave hour long talks on their research and took questions. The first day was supervised learning, the second was on unsupervised and reinforcement learning.
 
-The highlight of the two days was Jason Weston's presentation on the [bAbI tasks](https://research.facebook.com/researchers/1543934539189348). Leon Bottou mentioned this work in his keynote as an example of a way to evaluate machine learning systems that wasn't just another instance of the normal training/validation/test set paradigm. The context for the work is in Question Answering. The computer is presented a small story and asked a simple question like this...
+<span id="jason-weston" />The highlight of the two days was Jason Weston's presentation on the [bAbI tasks](https://research.facebook.com/researchers/1543934539189348). Leon Bottou mentioned this work in his keynote as an example of a way to evaluate machine learning systems that wasn't just another instance of the normal training/validation/test set paradigm. The context for the work is in Question Answering. The computer is presented a small story and asked a simple question like this...
 
 {% codeblock %}
 Mary moved to the bathroom.

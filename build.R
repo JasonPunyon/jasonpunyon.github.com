@@ -1,3 +1,4 @@
+#!/usr/local/bin/rscript
 KnitPost <- function(input, outfile, figsfolder, cachefolder, base.url="/") {
   # this function is a modified version of an example here:
   # http://jfisher-usgs.github.com/r/2012/07/03/knitr-jekyll/

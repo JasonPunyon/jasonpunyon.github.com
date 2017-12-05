@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.3.0/css/reveal.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.3.0/css/theme/black.css">
+        <style>
+            h1,h2,h3,h4,h5,h6 {
+                text-transform: none !important;
+            }
+            img
+            {
+                max-height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section id="let-us-begin">
+                    <h1>Rol</h1>
+                </section>
+                <section id="me">
+                    <img src="https://pbs.twimg.com/profile_images/757547734018695168/IG15FsJg_400x400.jpg" style="width:300px" />
+                    <h2>Jason Punyon</h2>
+                    <aside class="notes">
+                        I'm Jason Punyon.
+                    </aside>
+                </section>
+                <section id="what-i-do-and-where-i-do-it">
+                    <h2>Data Science</h2>
+                    <img src="http://i.imgur.com/uo5KUcA.png" style="border:none;background-color:transparent;box-shadow:none;margin:0;" />
+                    <aside class="notes">
+                        I work on the Data Science Team here at Stack Overflow.
+                    </aside>
+                </section>
+                <section id="what-we-built">
+                    <h2>Providence</h2>
+                    <img src="http://i.imgur.com/oePUhWb.gif" />
+                    <aside class="notes">
+                        A year and a half ago, we made a thing called Providence. 
+                    </aside>
+                </section>
+                <section id="what-it-does">
+                    <h2>Providence</h2>
+                    <img src="http://i.imgur.com/2zw1TjG.png" />
+                    <aside class="notes">
+                        Providence keeps track of the questions you view and answer on Stack Overflow in order to characterize and predict your interest in different technologies...
+                    </aside>
+                </section>
+                <section id="how-we-use-it">
+                    <h2>Read API</h2>
+                    <img src="http://i.imgur.com/hy2lrsy.png" />
+                    <p>Control how we use your data at <a href="https://stackoverflow.com/users/prediction-data">https://stackoverflow.com/users/prediction-data</a></p>
+                    <aside class="notes">
+                        ...and provides that information to our internal applications via a Read API.
+                    </aside>
+                </section>
+                <section id="how-often">
+                    <h2>~300 Req/s at Peak<h2>
+                    <img src="http://i.imgur.com/PnDfbkX.png" />
+                    <aside class="notes">
+                        We run ~ 300 requests per second at peak.
+                    </aside>
+                </section>
+                <section id="how-fast">
+                    <h2>99th Percentile Latency ~3-5ms</h2>
+                    <img src="http://i.imgur.com/ea4iceQ.png" />
+                    <p>SLA == 20ms</p>
+                    <aside class="notes">
+                        ...at a 99th percentile latency of 3 to 5 milliseconds.
+                    </aside>
+                </section>
+                <section id="how">
+                    <h2>How do we do it?<h2>
+                    <img src="http://i.imgur.com/wPnWeyG.png" class="fragment" style="border: 0; background-color: transparent; box-shadow:none;" />
+                    <p class="fragment" style="font-size: .25em">(basically)</p>
+                    <aside class="notes">
+                        How do we do it?
+
+                        With redis
+                    </aside>
+                </section>
+                <section id="how-else">
+                    <h2>How do we do it?<h2>
+                    <p class="fragment">Badly. 😭</p>
+                    <aside class="notes">
+                        How else do we do it?
+
+                        Badly.
+                    </aside>
+                </section>
+                <section id="why-bad">
+                    <h2>What's the Problem?</h2>
+                    <img class="fragment" src="http://i.imgur.com/aAA4Lpt.png" />
+                    <aside class="notes">
+                        Here's the data for a person in Providence. This is what we keep track of.
+                    </aside>
+                </section>
+                <section id="why-bad-architecture">
+                    <h2>What's the Problem?</h2>
+                    <img src="http://i.imgur.com/2zw1TjG.png" />
+                    <aside class="notes">
+                        And again here's how we keep track of it. Once a day providence wakes up, scrapes HAProxy to figure out what everyone's looked at, digests it all and writes it to redis.
+                        The Read API just reads from redis all day.
+                    </aside>
+                </section>
+                <section id="true-colors-shining-through">
+                    <h2>What's the Problem?</h2>
+                    <img style="border: none; vertical-align: top" src="http://imgur.com/Lk19ugR.png" />
+                    <img style="border: none; vertical-align: top; margin-left: 15px;" src="http://imgur.com/keyRCNq.png" />
+                    <aside class="notes">
+                        Our code doesn't go out of its way to hide its true colors. The writes are in one project and the reads are in another. 
+                    </aside>
+                </section>
+                <section id="why-bad-2">
+                    <h2>What's the Problem?</h2>
+                    <img class="fragment" src="http://imgur.com/Q9nYyas.png" />
+
+                    <aside class="notes">
+                        Writes are divorced from reads are divorced from the interface we're trying to implement.
+                    </aside>
+                </section>
+                <section>
+                    <h2>What's the Problem?</h2>
+                    <img src="http://imgur.com/UYjV704.png" />
+                    <aside class="notes">
+                        And so this thing is a great big mess.
+                    </aside>
+                </section>
+                <section>
+                    <h2>So to sum up...</h2>
+                </section>
+                <section>
+                    <h2>So to sum up...in GIF form</h2>
+                    <video data-autoplay loop src="http://i.imgur.com/guweAY4.mp4"></video>
+                    <aside class="notes">
+                        There's me back then...there's the providence data model...and there's what I did with it. Just kinda spread the love around, a bit over here, a bit over there. Beautiful.
+                    </aside>
+                </section>                
+                <section id="joke-slide">
+                    <h2>And what did I do about it?</h2>
+                    <img class="fragment" src="http://i.imgur.com/lvXUrkK.jpg" />
+                    <p class="fragment">...for months</p>
+                    <aside class="notes">
+                        And what did I do about it?
+                        Absolutely Nothing.
+                        For Months.
+
+                        Really I was busy with other stuff, and getting this code closer to its platonic ideal was just lower on the list of things to do. 
+                    </aside>
+                </section>
+                <section>
+                    So I had these problems floating around in my head for awhile, and this is what I made.
+                </secton>
+                <section>
+                    Interfaces as schema.
+                </section>
+                <section>
+                    Consistency? LOL.
+                    We run most of Stack Overflow at Read Uncommitted.
+                </section>
+            </div>
+        </div>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/reveal.js/3.3.0/js/reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                transition: "fade",
+                history: true
+            });
+        </script>
+    </body>
+</html>

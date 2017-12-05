@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fun With Random Numbers: Random Projection - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="So, there’s this bit of math called the Johnson-Lindenstrauss lemma. It makes a fairly fantastic claim. Here it is in math-speak from the original &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Fun With Random Numbers: Random Projection</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-12-02T12:25:46-05:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2017</span></span> <span class='time'>12:25 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So, there’s this bit of math called the Johnson-Lindenstrauss lemma. It makes a fairly fantastic claim. Here it is in math-speak from the original paper…</p>
+
+<p><img src="https://i.imgur.com/5vExomX.png" /></p>
+
+<p>Fantastic, right? What does it mean in slightly more lay speak?</p>
+
+<h3 id="the-fantastic-claim">The Fantastic Claim</h3>
+
+<p>Let’s say you have a set of 1000 points in a 10,000 dimensional space. These points could be the brightness of pixels from 100x100 grayscale images. Or maybe they’re the term counts of the 10,000 most frequent terms in a document from a corpus of documents. Whatever they are, each point has 10,000 dimensions.</p>
+
+<p>10,000 dimensions is hard to work with, so you’re interested in reducing the dimensionality of your data. The goal of such a reduction would be to make the points easier to work with (have fewer than 10,000 dimensions), but preserve the relevant structure so you can treat the reduced dimensional data as if it were the high dimensional data (analyze it, machine learn it, whatever).</p>
+
+<p>One piece of the structure you might be interested in preserving is the distance between the points. What does it mean to preserve distance? Let’s pick a percentage called ε and say that we want all distances between points calculated in the low dimensional space to be no more than ε% different from the distance between the same points calculated in the original high dimensional space. In pseudo math you might say that good dimensionality reductions lead to distances that obey D<sub>LowDimension</sub>= D<sub>High Dimension</sub> ± ε% for all points.</p>
+
+<p>So now we can get to the JL lemma’s fantastic claim.</p>
+
+<p>The JL lemma says that the number of dimensions you need in your lower dimensional space is completely independent of the number of dimensions in the original space. Your original data could be 10,000-dimensional or 10,000,000,000-dimensional, and the number of dimensions you need in the lower dimensional space in order to preserve distance depends only on the <em>number</em> of points and our boundary ε. The formula for the number of dimensions you need is:</p>
+
+<center>
+    n<sub>LowDimension</sub> = ln(Number of Points) / &epsilon;<sup>2</sup><br /><br />
+</center>
+
+<p>OK, let’s stop and take a breath. This result is absolutely-positively-100%-certified-grade-A-what-the-hell-is-up-with-the-universe to me. It’s beautiful and it makes my brain hurt. When I first thought about it I couldn’t do anything but stand up and pace around for a while. Take a minute or two to do the same.</p>
+
+<h3 id="the-fantastic-method">The Fantastic Method</h3>
+
+<p>Welcome back.</p>
+
+<p>Brace yourself. Even more fantastic than the claim that such dimensionality reductions exist and that they don’t depend on the dimensionality of the original space, is the method of doing such a reduction. Here’s the code…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">N <span class="o">=</span> <span class="m">10000</span> <span class="c1">#The Number of dimensions in the original space</span>
+n <span class="o">=</span> <span class="m">1000</span>  <span class="c1">#The number of dimensions in the low dimensional space</span>
+
+random_matrix <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">))</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>m<span class="p">)</span> <span class="c1">#The magical random matrix.</span>
+X <span class="o">=</span> GetData<span class="p">()</span> <span class="c1">#returns a nPoints x N matrix of your data points</span>
+
+X_projected <span class="o">=</span> X <span class="o">%*%</span> random_matrix</code></pre></div>
+
+<p>It’s…just random numbers. To do one of these good dimensionality reductions, you just sample an N × n matrix from the standard normal distribution and multiply. IT’S JUST RANDOM NUMBERS. Probably time for another walk and think.</p>
+
+<h3 id="srsly">SRSLY?</h3>
+
+<p>Welcome back, again. At this point I was at a total loss. We only need ln(NumberOfPoints) dimensions to have a good projection, and doing the projection is just sampling a random matrix and a matrix-multiply? Like, for real? This is a true fact? I tried to understand the proofs here but they’re a tad inscrutable (<a href="http://blog.geomblog.org/2011/11/intuitive-argument-for-jl-lemma.html">and not just to me</a>). It happens. I’m an engineer with some math background, not a mathematician. The next best thing is to just try it, right? The claim is so simple to test, and the method so simple to implement, that if I just run the code enough times I can quiet down my brain’s utter disbelief and maybe this can become a tool in my toolbox.</p>
+
+<h3 id="ok-lets-do-it">OK, let’s do it.</h3>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+N <span class="o">=</span> <span class="m">10000</span> <span class="c1">#The Number of dimensions in the original space</span>
+m <span class="o">=</span> <span class="m">1000</span>  <span class="c1">#The number of points in the dataset</span>
+epsilon <span class="o">=</span> <span class="m">.1</span>
+
+X <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>m <span class="o">*</span> N<span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> m<span class="p">,</span> N<span class="p">)</span> <span class="c1">#Let&#39;s just pick some normal random data.</span>
+distX <span class="o">=</span> dist<span class="p">(</span>X<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span> <span class="c1">#This is the distance matrix in the original space.</span>
+
+n <span class="o">=</span> <span class="kp">as.integer</span><span class="p">(</span><span class="kp">ceiling</span><span class="p">(</span><span class="kp">log</span><span class="p">(</span>m<span class="p">)</span> <span class="o">/</span> epsilon <span class="o">^</span> <span class="m">2</span><span class="p">))</span> <span class="o">+</span> <span class="m">1</span> <span class="c1">#The number of dimensions in the projected space.</span>
+
+random_matrix <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">)</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)</span> <span class="c1">#The magical random matrix</span>
+random_matrix <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">)</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)</span> <span class="c1">#See it&#39;s totally random, really there&#39;s nothing special about it.</span>
+random_matrix <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">)</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)</span> <span class="c1">#Look, the deck is really shuffled. Completely random. No tricks.</span>
+
+X_projected <span class="o">=</span> X <span class="o">%*%</span> random_matrix <span class="c1">#Project the points into the lower dimension.</span>
+distX_projected <span class="o">=</span> dist<span class="p">(</span>X_projected<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span> <span class="c1">#The distance matrix in the projected space.</span>
+
+distances <span class="o">=</span> <span class="kt">data.frame</span><span class="p">(</span>Distance <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>distX<span class="p">),</span>
+                       ProjectedDistance<span class="o">=</span><span class="kp">as.numeric</span><span class="p">(</span>distX_projected<span class="p">))</span></code></pre></div>
+
+<p>We’ve projected the original 10,000 dimensions down to 692 dimensions. We expect that all the distances are distorted by less than 10%. Let’s look at a histogram of the distortion of the distances…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">distances <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>Distance <span class="o">&gt;</span> <span class="m">0.0</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="c1">#Ignore the distance from a point to itself.</span>
+  mutate<span class="p">(</span>Distortion <span class="o">=</span> <span class="p">(</span>ProjectedDistance <span class="o">-</span> Distance<span class="p">)</span> <span class="o">/</span> Distance<span class="p">)</span> <span class="o">%&gt;%</span> 
+  sample_frac<span class="p">(</span><span class="m">.1</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Distortion<span class="p">))</span> <span class="o">+</span>
+  geom_histogram<span class="p">(</span>bins<span class="o">=</span><span class="m">40</span><span class="p">)</span> <span class="o">+</span> 
+  geom_vline<span class="p">(</span>xintercept <span class="o">=</span> epsilon<span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> lty <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
+  geom_vline<span class="p">(</span>xintercept <span class="o">=</span> <span class="o">-</span>epsilon<span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> lty <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span> 
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Distribution of Distortion&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  theme<span class="p">(</span>plot.title<span class="o">=</span>element_text<span class="p">(</span>size<span class="o">=</span><span class="m">22</span><span class="p">),</span>
+        axis.text.x<span class="o">=</span>element_text<span class="p">(</span>size<span class="o">=</span><span class="m">14</span><span class="p">),</span>
+        axis.text.y<span class="o">=</span>element_text<span class="p">(</span>size<span class="o">=</span><span class="m">14</span><span class="p">))</span></code></pre></div>
+
+<p><img src="/assets/2017-12-02-fun-with-random-numbers-random-projection/unnamed-chunk-1-1.png" alt="center" /></p>
+
+<p>And we see that they’re basically all in range. Fantastic.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-12-02T12:25:46-05:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2017</span></span> <span class='time'>12:25 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/" data-via="" data-counturl="http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/17/trip-report-icml-2015/" title="Previous Post: Trip Report: ICML 2015">&laquo; Trip Report: ICML 2015</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

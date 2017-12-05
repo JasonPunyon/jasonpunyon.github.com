@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Providence: Architecture and Performance - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="This post is part of a series on the Providence project at Stack Exchange. The first post can be found here. We’ve talked about how we’re trying to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Providence: Architecture and Performance</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-10T11:05:50-05:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:05 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>This post is part of a series on the Providence project at Stack Exchange.  The first post can be found <a href="http://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/">here</a>.</em></p>
+
+<p>We’ve talked about how we’re trying to understand our users better at Stack Exchange and seen just how <a href="http://jasonpunyon.com/blog/2015/02/05/providence-testing-and-results/">big an impact</a> it’s had on our pilot project, the Careers Job Ads. Let’s take a look at the architecture of the system.</p>
+
+<p><img class="center" src="http://i.imgur.com/2zw1TjG.png" /></p>
+
+<h2 id="hardware">Hardware</h2>
+
+<p>This is the easy part, so let’s just get it out of the way. Providence has 2 workhorse servers (where we crunch data and make predictions), and 3 redis servers, configured like this:</p>
+
+<h3 id="workhorse-servers">Workhorse Servers</h3>
+<ul>
+  <li>Dell R620</li>
+  <li>Dual Intel E5-2697v2 (12 Physical Cores @2.7GHz, 30MB Cache, 3/3/3/3/3/3/3/4/5/6/7/8 Turbo)</li>
+  <li>384GB RAM (24x 16GB @ 1600MHz)</li>
+  <li>2x 2.5” 500GB 7200rpm (RAID 1 - OS)</li>
+  <li>2x 2.5” 512GB Samsung 840 Pro (RAID 1 - Data)</li>
+</ul>
+
+<h3 id="redis-servers">Redis Servers</h3>
+<ul>
+  <li>Dell R720XD</li>
+  <li>Dual Intel E5-2650v2 (8 Physical Cores @2.6GHz, 10MB Cache, 5/5/5/5/5/6/7/8 Turbo)</li>
+  <li>384GB RAM (24x 16GB @ 1600MHz)</li>
+  <li>2x 2.5” 500GB 7200rpm (RAID 1 - OS, in Flex Bays)</li>
+  <li>4x 2.5” 512GB Samsung 840 Pro (RAID 10 - Data)</li>
+</ul>
+
+<p>If you’re a hardware aficionado you might notice that’s a weird configuration for a redis box. More on that (and the rest of our failures) in my next post.</p>
+
+<h2 id="software">Software</h2>
+
+<p>Providence has 3 main parts: The Web Apps/HAProxy, The Daily Process, and the Read API.</p>
+
+<h3 id="the-web-apps-and-haproxy">The Web Apps and HAProxy</h3>
+
+<h4 id="identity">Identity</h4>
+
+<p><img class="center" src="http://i.imgur.com/F2bQsA1l.jpg" /></p>
+
+<p>Providence’s architecture starts with the problem of identity. In order to make predictions about people we have to know who’s who. We handle identity in the Stack Exchange web application layer. When a person comes to Stack Exchange they’re either logged in to an account or not. If they’re logged in we use their Stack Exchange AccountId to identify them. If they’re not logged in, we set their “Providence Cookie” to a random GUID with a far future expiration and we use that to identify the person. We don’t do panopticlicky evercookies or anything, because ew. We add the person’s identifier to a header in every response the web application generates.</p>
+
+<h4 id="haproxy">HAProxy</h4>
+
+<p>HAProxy sits in front of all our web apps and strips the identity header off of the response before we return it to the user. HAProxy also produces a log entry for every request/response pair that includes things like the date, request URI and query string, and various timing information. Because we added the person’s identity to the response headers in the web application layer, the log also includes our identifier for the person (the AccountId or the Providence Cookie).</p>
+
+<p>We take all these log entries and put them into our HAProxyLogs database, which has a table for each day. So for each day we have a record of who came to the sites and what URIs they hit. This is the data that we crunch in the Daily Process.</p>
+
+<h3 id="the-daily-process">The Daily Process</h3>
+
+<p>At the end of each broadcast day we update Providence’s predictions. The Daily Process is a console application written in C# that gets run by the Windows Task Scheduler at 12:05AM UTC every morning. There are 6 parts to the Daily Process.</p>
+
+<h4 id="identity-maintenance">Identity Maintenance</h4>
+
+<p>Whenever a person logs in to Stack Exchange they will have 2 identifiers in the HAProxyLogs that belong to them: the ProvidenceCookie GUID (from when they were logged out) and their AccountId (from after they logged in). We need to make sure that we know these two identifiers map to the same person. To do that we have the web app output both identifiers to the HAProxyLogs whenever someone successfully logs in. Then we run over the logs, pull out those rows, and produce the Identifier Merge Map. This tells us which Providence Cookie GUIDs go with which AccountIds. We store the Identifier Merge Map in protocol buffers format on disk.</p>
+
+<p>Identity maintenance takes about 20 minutes of the Daily Process. The merge map takes up about 4GB on disk.</p>
+
+<h4 id="tag-views-maintenance">Tag Views Maintenance</h4>
+
+<p>The second step of the Daily Process is to maintain Tag View data for each person. A person’s Tag View data is, for each tag, the number of times that person has viewed a question with that tag. The first thing we do is load up the Identifier Merge Map and merge all the existing Tag View data to account for people who logged in. Then we run over the day’s HAProxyLogs table pulling out requests to our Questions/Show route. We regex the question id out of the request URI, lookup that question’s tags and add them to the person’s Tag View data.</p>
+
+<p>We keep all Tag View data in one of our redis instances. It’s stored in hashes keyed by a person’s identifer. The field names of the hashes are integers we assign to each tag, the values are the number of times the person has viewed a question with the associated tag.</p>
+
+<p><img class="center" src="http://i.imgur.com/8pMDcGR.png" /></p>
+
+<p>For each person we also maintain when their Tag View data was last updated, once in each person’s TagViews hash, and once again in a redis sorted set called “UpdatedDates” (more on this in a moment).</p>
+
+<p>Tag Views maintenance takes about 20 minutes of the Daily Process. The Tag View data set + UpdatedDates fits in about 80GB of memory, and 35GB when saved to disk in redis’ RDB format.</p>
+
+<h4 id="making-predictions">Making Predictions</h4>
+
+<p><img class="center" src="http://i.imgur.com/n34vyqO.jpg" width="512" /></p>
+
+<p>The third step of the Daily Process is to update our predictions. Our models are static, and the only input is a person’s Tag View data. That means we only need to update predictions for people whose Tag View data was updated. This is where we use the UpdatedDates sorted set as it tells us exactly who was updated on a particular day. If we didn’t have it, we’d have to walk the entire redis keyspace (<a href="https://twitter.com/JasonPunyon/status/558261589951143936">670MM keys at one point</a>) to find the data to update. This way we only get the people we need to do work on.</p>
+
+<p>We walk over these people, pull out their Tag View data and run it through each of our predictors: Major, Web, Mobile, and Other Developer Kinds, and Tech Stacks. We dump the predictions we’ve made onto disk in dated folders in protocol buffers format. We keep them on disk for safety. If we hose the data in redis for some reason and we don’t notice for a few days we can rebuild redis as it should be from the files on disk.</p>
+
+<p>Making predictions takes 5 or 6 hours of the Daily Process. The predictions take up about 1.5GB on disk per day.</p>
+
+<h4 id="loading-predictions-into-redis">Loading Predictions Into Redis</h4>
+
+<p>The fourth step of the Daily Process is to load all the predictions we just made into redis. We deserialize the predictions from disk and load them into our other redis server. It’s a similar setup to the Tag View data. There’s a hash for each person keyed by identifier, the fields of the hash are integers that map to particular features (1 = MajorDevKind.Web, 2 = MajorDevKind.Mobile, etc), and the values are the predictions (just doubles) for each feature.</p>
+
+<p><img class="center" src="http://i.imgur.com/zpyDvjh.png" /></p>
+
+<p>Loading predictions takes about 10 minutes of the Daily Process. The predictions dataset takes up 85GB in memory and 73GB on disk in redis’ RDB format.</p>
+
+<h4 id="six-week-cull">Six Week Cull</h4>
+
+<p>Providence’s SLA is split by whether you’re anonymous or not. We keep and maintain predictions for any anonymous person we’ve seen in the last 6 weeks (the vast vast majority of people). We keep and maintain predictions for logged in people (the vast vast minority of people) indefinitely as of 9/1/2014. So that means once an anonymous person hasn’t been updated in 6 weeks we’re free to delete them, so we do. We use the UpdatedDates set again here to keep us from walking hundreds of millions of keys to evict the 1% or so that expire.</p>
+
+<p>The Six Week Cull runs in about 10 minutes.</p>
+
+<h4 id="backuprestore">Backup/Restore</h4>
+
+<p>The last part of the Daily Process is getting all the data out to Oregon in case we have an outage in New York. We backup our two redis instances, rsync the backups to Oregon, and restore them to two Oregon redis instances.</p>
+
+<p>The time it takes to do Backup/Restore to Oregon varies based on how well our connection to Oregon is doing and how much it’s being used by other stuff. We notify ourselves at 5 hours if it hasn’t completed just to make sure someone looks at it and we’ve tripped that notification a few times. Most nights it takes a couple hours.</p>
+
+<h3 id="the-read-api">The Read API</h3>
+
+<p>Step four in the Daily Process is to load all our shiny new predictions into redis. We put them in redis so that they can be queried by the Read API. The Read API is an ASP.NET MVC app that turns the predictions we have in redis hashes into JSON to be consumed by other projects at Stack Exchange. It runs on our existing service box infrastructure.</p>
+
+<p>The ad server project calls into the Read API to get Providence data to make better decisions about which jobs to serve an incoming person. That means the Read API needs to get the data out as quickly as possible so the ad renders as quickly as possible. If it takes 50ms to pull data from providence we’ve just eaten the entire ad server’s response time budget. To make this fast Read API takes advantage of the serious performance work that’s gone into our redis library <a href="https://github.com/StackExchange/StackExchange.Redis">StackExchange.Redis</a>, and <a href="http://stackoverflow.com/users/80572/kevin-montrose">Kevin’s</a> JSON serializer <a href="https://github.com/kevin-montrose/jil">Jil</a>.</p>
+
+<h2 id="performance">Performance</h2>
+
+<h3 id="the-workhorses">The Workhorses</h3>
+
+<p><img class="center" src="http://i.imgur.com/ZPuNMR3.png" /></p>
+
+<p>Excluding backups, the daily process takes about 7 hours a day, the bottleneck of which is cranking out predictions. One workhorse box works and then sits idle for the rest of the day. The second workhorse box sits completely idle, so we have plenty of room to grow CPU-hours wise.</p>
+
+<h3 id="redis">Redis</h3>
+
+<p><img class="center" src="http://i.imgur.com/i0Pe58c.png" /></p>
+
+<p>With redis we care about watching CPU load and memory. We can see there’s two humps in CPU load each day. The first hump is the merging of Tag View data, the second is when redis is saving backups to disk. Other than that, the redii sit essentially idle, only being bothered to do reads for the Read API. We aren’t even using the third redis box right now. After we implemented the Six Week Cull, the Tag Views and Predictions data sets fit comfortably in RAM on one box, so we may combine the two we’re using down to just one.</p>
+
+<h3 id="the-read-api-1">The Read API</h3>
+
+<p><img class="center" src="http://i.imgur.com/hHRrPHJ.png" /></p>
+
+<p>The big thing to watch in the Read API is latency. The Read API has a pretty decent 95th-percentile response time since launch, but we did have some perf stuff to work out. The Read API is inextricably tied to how well the redii are doing, if we’re cranking the TagViews redis core too hard, Read API will start timing out because it can’t get the data it needs.</p>
+
+<p><img class="center" src="http://i.imgur.com/clH67WA.png" /></p>
+
+<p>At peak the Read API serves about 200 requests/s.</p>
+
+<h2 id="failure-is-always-an-option">Failure is Always an Option</h2>
+
+<p>That’s it for the architecture and performance of Providence. Up next we’ll talk about our failures in designing and building Providence.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-10T11:05:50-05:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:05 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/" data-via="" data-counturl="http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/05/providence-testing-and-results/" title="Previous Post: Providence: Testing and Results">&laquo; Providence: Testing and Results</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/12/providence-failure-is-always-an-option/" title="Next Post: Providence: Failure Is Always An Option">Providence: Failure Is Always An Option &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

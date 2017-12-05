@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A Wild Anomaly Appears! Part 2: The Anomaling - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="After all the rave reviews of my last post I knew you were just on the edge of your seat waiting to hear more about my little unsupervised text &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A Wild Anomaly Appears! Part 2: The Anomaling</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-05T16:50:47-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:50 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>After all the rave reviews of my last post I knew you were just on the edge of your seat waiting to hear more about my little unsupervised text anomaly detector.</p>
+
+<p><a href="http://i.imgur.com/94aVQ7k.png"><img class="center" src="http://i.imgur.com/94aVQ7k.png" /></a>
+<a href="http://i.imgur.com/9JSJPYd.png"><img class="center" src="http://i.imgur.com/9JSJPYd.png" /></a>
+<a href="http://i.imgur.com/MShsVz7.png"><img class="center" src="http://i.imgur.com/MShsVz7.png" /></a></p>
+
+<p>So, we’ve got some <a href="http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears/">working ML</a>! Our job’s done right?</p>
+
+<p><a href="http://i.imgur.com/aSHZLkH.png"><img class="center" src="http://i.imgur.com/aSHZLkH.png" /></a></p>
+
+<p>‘Round these parts, it ain’t shipped ‘til it’s fast <em>and</em> it’s got it’s own chat bot. We spend all day in chat and there’s a cast of characters we’ve come to know, and love, and hate.</p>
+
+<h2 id="pinbot">Pinbot</h2>
+
+<p><a href="http://imgur.com/qaqcvek.png"><img class="center" src="http://imgur.com/qaqcvek.png" /></a></p>
+
+<p>Pinbot helps us not take each other’s database migrations. You can say “taking ###” and Pinbot removes the last taken migration from this room’s pins and replaces it with this one. So we always know what migration we’re up to, even if someone hasn’t pushed it yet. Also pictured: Me calling myself a dumbass in the git logs. Which gets broadcast by our TeamCity bot. Someone starred it.</p>
+
+<h2 id="hair-on-fire">Hair on Fire</h2>
+
+<p><a href="http://i.imgur.com/yt2rLV4.png"><img class="center" src="http://i.imgur.com/yt2rLV4.png" /></a></p>
+
+<p>Hair on fire bot helps Careers keep making money. Hair on fire pops up every now and again to tell us a seriously critical error that affects the bottom line has happened on the site. If someone is buying something or on their way to buying something and gets an exception Hair On Fire dumps the details directly to chat so someone can get to work immediately.</p>
+
+<h2 id="logobot">LogoBot</h2>
+
+<p><a href="http://i.imgur.com/CGCeY9l.png"><img class="center" src="http://i.imgur.com/CGCeY9l.png" /></a></p>
+
+<p>Here’s another little Careers helper. We have a policy that any advertising images that go up on Stack Overflow <em>must</em> be reviewed by a real live person. When display advertising is purchased from our ad sales/ad operations teams, they do it. When we introduced <a href="http://careers.stackoverflow.com/products/company-pages">Company Page Ads</a> we automated the process of getting images on Stack Overflow and no one had to talk to a sales person. This begat LogoBot who reminds us to do our job and make sure no one’s putting up animated gifs or other such tawdriness.</p>
+
+<h2 id="malfunctioning-eddie">Malfunctioning Eddie</h2>
+
+<p><a href="http://i.imgur.com/KvswKSK.png"><img class="center" src="http://i.imgur.com/KvswKSK.png" /></a></p>
+
+<p>Malfunctioning Eddie’s…got problems.</p>
+
+<h2 id="anomaly-bot">Anomaly Bot</h2>
+
+<p>Which brings me to the Anomaly bot. We need to make sure that all these anomalous jobs I’m detecting get in front of the sales support team. They are the human layer of detectors I alluded to in my last post who used to have to check over every single job posted to the board.</p>
+
+<p><a href="http://i.imgur.com/ZJDszbV.png"><img class="center" src="http://i.imgur.com/ZJDszbV.png" /></a></p>
+
+<p>There it is. Anomaly bot. Where does it lead us puny humans?</p>
+
+<p><a href="http://i.imgur.com/zBsNv8n.png"><img class="center" src="http://i.imgur.com/zBsNv8n.png" /></a></p>
+
+<p>Welcome to the super secret admin area of Careers. At the top of the page we have a list of the jobs that were posted today. There are 3 columns, the anomaly score (which is based solely on title), the job title, and a few buttons to mark the job anomalous or not. The second section of the page is for all jobs currently on the board.</p>
+
+<p><a href="http://i.imgur.com/6WOgbJV.png"><img class="center" src="http://i.imgur.com/6WOgbJV.png" /></a></p>
+
+<p>I’m hoping the heatmap pops out at you. It runs from Red (pinned to the all-time most anomalous job) to Green (pinned to the all-time most middle-of-the-road job ever). The jobs posted today are light orange at worst, so that’s pretty good! On the “all jobs” list there’s a bunch of red that we need to review.</p>
+
+<p>Just to give a reference, here was the first version sans heatmap.</p>
+
+<p><a href="http://i.imgur.com/qawGqwB.png"><img class="center" src="http://i.imgur.com/qawGqwB.png" /></a></p>
+
+<p>So much more information in that tiny extra bit of color. If you want to make simple heatmaps it’s really easy to throw together some javascript that uses <a href="http://stackoverflow.com/questions/340209/generate-colors-between-red-and-green-for-a-power-meter/340214">the power of HSL</a>.</p>
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p>We’re gonna let this marinate for a while to actually test my hypothesis that we only have to look at the top 10% of jobs by anomaly score. The sales support team’s gonna clear the backlog in the “all jobs” section of the report, then use the tool for a little while and then we’ll have the data we need to actually set the threshold. Once we do that the Anomaly bot can get a little smarter. Right now Anomaly bot just shows every three hours with that same dumb message. Maybe it’ll only show up when there’s jobs above our human-trained threshold (modulo a safety factor). Maybe we’ll change it to pop up as soon as an anomalous job gets posted on the board.</p>
+
+<h2 id="here-have-some-code">Here, have some code</h2>
+
+<p>If you want to use the very code we’re using right now to score the job titles it’s up on <a href="http://www.nuget.org/packages/AnomalousText/">Nuget</a>, and the source is on <a href="https://github.com/JasonPunyon/AnomalousText">Github</a></p>
+
+<h2></h2>
+
+<p><a href="http://careers.stackoverflow.com/jobs/62161"><img class="left" src="http://i.imgur.com/iqLGcMN.png" /></a></p>
+
+<p>Got experience solving problems like this one? Wanna work at a place like <a href="http://stackexchange.com/work-here">Stack Exchange</a>? Head on over to our completely middle-of-the-road <a href="http://careers.stackoverflow.com/jobs/62161">job listing</a> and get in touch with us.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-05T16:50:47-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:50 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ml/'>ml</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling/" data-via="" data-counturl="http://jasonpunyon.com/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/02/a-wild-anomaly-appears/" title="Previous Post: A wild anomaly appears!">&laquo; A wild anomaly appears!</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/02/05/providence-testing-and-results/" title="Next Post: Providence: Testing and Results">Providence: Testing and Results &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

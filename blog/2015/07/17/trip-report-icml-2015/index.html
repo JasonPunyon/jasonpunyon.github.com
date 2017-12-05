@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Trip Report: ICML 2015 - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="One of the awesome benefits of working at Stack Overflow is the Conferences and Education policy. You get a ballpark budget ($3500) and time (3 days &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2015/07/17/trip-report-icml-2015">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Trip Report: ICML 2015</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-07-17T09:13:45-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:13 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>One of the awesome benefits of working at Stack Overflow is the Conferences and Education policy. You get a ballpark budget ($3500) and time (3 days) each year to update your skills and knowledge. In return for all this conferencing and educationing you write up a summary of what you learned and your experience at the conference.</p>
+
+<p>This year I went to the <a href="http://icml.cc/2015/">International Conference on Machine Learning</a> in Lille, France. ICML is an academic conference broken up into three parts: 1 day of tutorials, 3 days of “The Main Conference”, and 2 days of Workshops.</p>
+
+<p><strong>TL;DR</strong>: I loved the tutorials, the keynotes, and the workshops. The paper sessions were hit-or-miss but I might’ve been doing it wrong (sorry, I’m new to the job). It was a great conference, I’m gonna go again next year.</p>
+
+<h2 id="the-tutorials">The Tutorials</h2>
+<p>The tutorials were my favorite part of the conference. I wish the whole conference were tutorials like the ones I went to on this first day. There were three two-hour-long sessions that started at the surface and tried to dive somewhat deeply into their respective topics.</p>
+
+<h3 id="natural-language-understanding-foundations-and-state-of-the-art">Natural Language Understanding: Foundations and State-of-the-Art</h3>
+<p>This was my favorite tutorial. It was given by Percy Liang, a computer science professor and natural language researcher at Stanford. One of the presenter’s goals was to seed the minds of ML theorists and practitioners with the essential phenomena and sharp corners of natural language in hopes of motivating new ideas. The amount of information he related in such a short time was impressive and there’s no way I can do it justice in a paragraph. Read through <a href="http://icml.cc/2015/tutorials/icml2015-nlu-tutorial.pdf">the slides</a> to get an idea. There’s video coming in September.</p>
+
+<h3 id="advances-in-structured-prediction">Advances in Structured Prediction</h3>
+<p>The next tutorial was a two-parter on Structured Prediction from Hal Daume III and John Langford. I liked this tutorial because I knew the least about structured prediction going in and I felt like I had at least a tenuous grasp on it by the end. Structured prediction is about answering the question “What can you do if you’re going to give up the independence assumption and model a joint probability distribution?” The tutorial went through what structured prediction was and existing methods, then talked about their method (Learning to Search), empirical results, performance, and advertised their fast/flexible implementation in Vowpal Wabbit. <a href="http://icml.cc/2015/tutorials/AdvancesStructuredPrediction.pdf">slides</a></p>
+
+<h3 id="modern-convex-optimization-methods-for-large-scale-empirical-risk-minimization">Modern Convex Optimization Methods for Large-scale Empirical Risk Minimization</h3>
+<p>The final tutorial of the day was another two-parter on convex optimization. Machine learning is frequently formulated as minimizing (optimizing) a loss function. Certain loss functions have mathematical properties that make them efficiently optimizable and we call those functions “convex”. Two subsets of methods within convex optimization are: “primal” methods (gradient descent) and “dual” methods (coordinate descent). The first part of the talk covered primal methods and the second part of the talk covered the dual methods and concerns at-scale like minibatching, parallelization, and distributed implementations.</p>
+
+<p>I liked this talk because it was mathy and about performance characteristics on big problems and we really dig that kind of thing at Stack Overflow, however this seemed like it was the furthest tutorial from me practically. It’s nice to know that people are attacking that size of problem but our problems just aren’t big enough to warrant some of these techniques. <a href="http://icml.cc/2015/tutorials/2015_ICML_ConvexOptimization_I.pdf">part 1 slides</a> <a href="http://icml.cc/2015/tutorials/2015_ICML_ConvexOptimization_II.pdf">part 2 slides</a></p>
+
+<h2 id="the-main-conference">The Main Conference</h2>
+
+<p>Each day of the main conference had a keynote address and then 3-4 sessions of 3-5 short talks on submitted papers organized into different tracks. There were also poster sessions where you could meet and greet the researchers and dive into their paper with them in more depth.</p>
+
+<h3 id="keynotes">Keynotes</h3>
+
+<p>Susan Murphy’s “Learning Treatment Policies in Mobile Health” was an interesting tale at the corner of healthcare funding, clinical trial design, machine learning, and mobile development. Smartphones might be able to provide effective, low-cost, personalized, just-in-time treatment for things we don’t fund particularly well in the US like drug addiction treatment. How to even study the problem is a can-of-worms factory. Conflating factors abound where you’re vying for a subject’s attention via their phone in the real world instead of in an in-patient treatment setting. Trying to learn effective treatment policies through the noise is a crazy-ambitious goal. I was really impressed by their devotion to the ethics of the research. Things like refusing to have the phone light up/deliver messages when it was moving above a certain speed. No point in trying to help the person’s drug addiction if messaging them causes them to crash their car.</p>
+
+<p>Jon Kleinberg’s “Social Phenomena in Global Networks” talked about how we’re recording social activity more granularly than ever and insights that can be gleaned from looking at a person’s network neighborhood in a social graph and the interactions the person has with their network over time. He discussed the different features to extract from the graph in order to solve the problem of identifying a person’s romantic partner.</p>
+
+<h4 id="two-high-stakes-challenges-in-machine-learning">Two High-Stakes Challenges in Machine Learning</h4>
+
+<p>Both of those were super interesting but they were eclipsed by Leon Bottou’s talk on <a href="http://icml.cc/2015/invited/LeonBottouICML2015.pdf">two high-stakes challenges in machine learning</a>. The first challenge is that machine learning components are fundamentally different from the things we’re used to in software engineering. ML components aren’t rigid like sorting routines, they’re squishy. The guarantees they provide are weak. If the training set data distribution is different from the data distribution in situ for any reason, all your guarantees go out the window. Your component just ambles around drunkenly in an alien world grasping for vestiges of the only reality it knows.</p>
+
+<p>“AHA!” you think. “I ain’t no fool. We won’t fall victim to the data distribution drift problem with statically trained models because we won’t use ‘em! We’ll learn <em>online</em>!” I, for one, greatly admire the bold leadership it takes to suggest that we actually fight fire with fire. Some would say “Maybe we’ve got enough learning,” but you say “Maybe we haven’t got enough learning enough!” I like you.</p>
+
+<p>The problem with learning online is that you’ve created an even shakier foundation for your engineering division, because feedback loops are <em>everywhere</em>. If your organization has more than one online learning ML algorithm in a particular pipeline you’ve got a system where one piece can learn from another piece that is learning from the first piece. These feedback loops can manifest themselves at two online algorithms in the pipeline, imagine what happens when you’re trying to learn online in many places across a large engineering organization.</p>
+
+<p>The second challenge is that the experimental paradigm that has driven machine learning forward over the last few decades is reaching its limits. Machine learning has a single experimental paradigm: split up the data into a test set and training/validation sets, train on the training/validation sets, and test final performance on the test set. Machine learning is an outlier among experimental sciences in that it has a single paradigm. Other sciences have to work much harder to design their experiments and interpret their results.</p>
+
+<p>One of the problems with this single paradigm and its focus on datasets is that <a href="http://people.csail.mit.edu/torralba/publications/datasets_cvpr11.pdf">large datasets are biased</a>. Training and testing on biased datasets leads to unrealistic expectations of performance. The image below pretty much tells the story. When classifying cars, models trained on one of the large datasets perform worse when tested on the other large datasets almost universally. If cars were represented in these datasets in an unbiased way you’d expect much smaller differences in performance.</p>
+
+<p><img src="http://i.imgur.com/KgOfZGh.png" /></p>
+
+<p>And while we’re at it, we aren’t even learning the right things if we want to acheive the heights of our increased ambitions. Our solution to classifying is statistical classification. But it’s hard to find a purely statistical basis in which to ground some problems like the one brought up in this slide…</p>
+
+<p><img src="http://i.imgur.com/v6FUATk.png" /></p>
+
+<p>These insights were really eye-opening for me coming from a young engineering organization that’s only recently become more rigorous about adding ML components to our stack.</p>
+
+<h3 id="papers">Papers</h3>
+
+<p>Paper sessions were scheduled around the keynotes. Each session had a topic, some topics spanned multiple sessions over the three days. The sessions all went similarly, a presenter would present their paper in ~15 minutes, then there was time for a few questions, then…next presenter.</p>
+
+<p>This ended up being pretty grueling by the end of the third day. There wasn’t really time to just think about any of the things that were presented to you. Trying to put together the-problem-you-didn’t-even-know-was-a-problem-3-minutes-ago and the research-at-the-edge-of-human-understanding that was just presented as the solution to that problem was a difficult process to repeat 3 times an hour, 6 hours a day, for 3 days. That’s not to mention synthesizing the information from the day’s keynote, and the poster sessions. These were long days. Jet lag wasn’t helping either.</p>
+
+<p>At any time there were 6 paper sessions going on, so my strategy was to just pick the topic that I was most interested in. This was a bit of a high variance strategy as the sessions had a hit-or-miss quality to them. Other people used a more informed strategy of picking specific papers/presenters they knew to be good and then chose their sessions based on that. There’s no “Map of the Machine Learning Stars” to consult though…my lack of familiarity with a lot of the field precludes that kind of strategy. Maybe when I’ve been around a bit longer I’ll have a better handle on that kind of thing.</p>
+
+<h2 id="the-workshops">The Workshops</h2>
+
+<p>The final piece of the conference was the workshops. These were little mini-conferences organized by groups repesenting subfields of machine learning. I was happy to attend the 2-day workshop on the latest in Deep Learning. Invited speakers gave hour long talks on their research and took questions. The first day was supervised learning, the second was on unsupervised and reinforcement learning.</p>
+
+<p><span id="jason-weston"></span>The highlight of the two days was Jason Weston’s presentation on the <a href="https://research.facebook.com/researchers/1543934539189348">bAbI tasks</a>. Leon Bottou mentioned this work in his keynote as an example of a way to evaluate machine learning systems that wasn’t just another instance of the normal training/validation/test set paradigm. The context for the work is in Question Answering. The computer is presented a small story and asked a simple question like this…</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Mary moved to the bathroom.
+</span><span class="line">John went to the hallway.
+</span><span class="line">Where is Mary?</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>You can classify the questions asked by the kind of knowledge necessary to answer them. The example above is of task #1 “Basic Factoid QA with a Single Supporting Fact”. Here’s an example of task #14 “Time manipulation”…</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">In the afternoon Julie went to the park.
+</span><span class="line">Yesterday Julie was at school.
+</span><span class="line">Julie went to the cinema this evening.
+</span><span class="line">Where did Julie go after the park?</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>There are 18 more of these tasks that all test a different aspect of the machine’s “intelligence”. Counting, Negation, Deduction, Positional reasoning are some of these aspects. The bAbI tasks are interesting because they attempt to probe a specific ability of the program, much like a unit test. Cataloging the abilities of an ML system in this way was something I haven’t come across before. I’m really drawn to the idea.</p>
+
+<h2 id="wrap-up">Wrap Up</h2>
+
+<p>ICML 2015 was a great conference. It reminded me of being in the physics research community and rekindled my latent love for academia. I’ve been away from it for a long time. ICML 2016 is in NYC next year which is a lot closer to home. I’ll definitely be going.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-07-17T09:13:45-04:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:13 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2015/07/17/trip-report-icml-2015/" data-via="" data-counturl="http://jasonpunyon.com/blog/2015/07/17/trip-report-icml-2015/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/12/providence-failure-is-always-an-option/" title="Previous Post: Providence: Failure Is Always An Option">&laquo; Providence: Failure Is Always An Option</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2017/12/02/fun-with-random-numbers-random-projection/" title="Next Post: Fun With Random Numbers: Random Projection">Fun With Random Numbers: Random Projection &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2015/07/17/trip-report-icml-2015/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2015/07/17/trip-report-icml-2015/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

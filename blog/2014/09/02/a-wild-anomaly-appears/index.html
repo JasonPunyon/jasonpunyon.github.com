@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A Wild Anomaly Appears! - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="So, I’m working on the new Data Team at Stack Exchange now. Truth is we have no idea what we’re doing (WANNA JOIN US?). But every now and then we &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A Wild Anomaly Appears!</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-02T18:28:00-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>6:28 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So, I’m working on the new Data Team at <a href="http://stackexchange.com">Stack Exchange</a> now. Truth is we have no idea what we’re doing (<a href="http://careers.stackoverflow.com/jobs/62161/data-science-engineer-stack-exchange">WANNA JOIN US?</a>). But every now and then we come across something that works a little too well and wonder why we haven’t heard about it before.</p>
+
+<p>We run a <a href="http://careers.stackoverflow.com/jobs">niche job board for programmers</a> that has about 2900 jobs on it this morning. Quality has been pretty easy to maintain. We have a great spam filter called “The $350 Price Tag”. Then we have some humans that look over the jobs that get posted looking for problems. Overall the system works well, but at 2900 jobs a month that means someone has to look through about 150 jobs every working day. They’re looking for a needle in a haystack as most (&gt;95%) of the jobs posted are perfectly appropriate for the board, so there’s a lot of “wasted” time spent looking for ghosts that aren’t there. And it’s pretty boring to boot. I’m sure that person would rather do other things with their time.</p>
+
+<p>It’d be nice if we had an automated way of dealing with this. We have no idea what we’re doing, so we frequently just reach into our decidedly meager bag of tricks, pull one out, and try it on a problem. I’d done that a few times before on this problem, trying Naive Bayes or Regularized Logistic Regression, but had gotten nowhere. There are a lot of different ways a job can be appropriate for the board and there are a lot of different ways a job could be not appropriate for the board which makes coming up with a representative training set difficult.</p>
+
+<p>Last week while taking another whack at the problem I Googled “Text Anomaly” and came across David Guthrie’s 186 page Ph. D. thesis, <a href="http://nlp.shef.ac.uk/Completed_PhD_Projects/guthrie.pdf">Unsupervised Detection of Anomalous Text</a>. There’s a lot there, but the novel idea was simple enough (and it worked in his experiments and mine) that I’m surprised I haven’t heard about it until now.</p>
+
+<h3 id="distance-to-the-textual-complement">Distance to the Textual Complement</h3>
+
+<p>Say you have a bunch of documents. You pull one out and want to determine how anomalous it is with respect to all the others. Here’s what you do:</p>
+
+<ol>
+  <li>Choose some features to characterize the document in question.</li>
+  <li>Convert the document to its feature representation.</li>
+  <li>Treat all the other documents as one giant document and convert that to its feature representation.</li>
+  <li>Calculate the distance between the two.</li>
+</ol>
+
+<p>Do this for every document and sort the results descending by the distance calculated in step 4. The documents at the top of the list are the “most anomalous”.</p>
+
+<p>That’s it. Pretty simple to understand and implement. There are two choices to make: which features, and which distance metric to use.</p>
+
+<h2 id="obscurity-of-vocabulary-i-choose-you">Obscurity of Vocabulary, I choose you!</h2>
+
+<p>In any machine learning problem you have to come up with features to characterize the set of things you’re trying to work on. This thesis is chock full of features, 166 of them broken up into a few different categories. This part of the paper was a goldmine for me (remember, I have no idea what I’m doing). The text features I knew about before this were word counts, frequencies, tf-idf and maybe getting a little into part of speech tags. The kinds of features he talks about are stuff I never would’ve come up with on my own. If you’re doing similar work and are similarly lost, take a look there for some good examples of feature engineering.</p>
+
+<p>The set of features that stood out to me the most were the ones in a section called “Obscurity of Vocabulary Usage”. The idea was to look at a giant reference corpus and rank the words in the corpus descending by frequency. Then you make lists of the top 1K, 5K, 10K, 50K, etc. words. Then you characterize a document by calculating the percentages of the document’s words that fall into each bucket.</p>
+
+<h2 id="manhattan-distance-i-choose-you">Manhattan Distance, I choose you!</h2>
+
+<p>Guthrie pits a bunch of distance metrics against eachother and for Distance to the Textual Complement method the <a href="http://en.wikipedia.org/wiki/Taxicab_geometry">Manhattan distance</a> got the blue ribbon, so I used that.</p>
+
+<h1 id="setup">Setup</h1>
+
+<p>When I’ve been looking through the jobs before I can pretty much tell by their titles whether they’re busted or not, so my documents were just the job titles. There isn’t really a good reference corpus from which to build the Top-N word lists, so I just used the job titles themselves. I tried a couple different sets of Ns but ended up on 100, 300, 1000, 3000, and 10000 (Really ~7,000 as that’s the number of unique terms in all job titles).</p>
+
+<p><a href="http://i.imgur.com/UxtpK5K.png"><img src="http://i.imgur.com/UxtpK5K.png" /></a></p>
+
+<h1 id="results">Results</h1>
+
+<p>Here’s the sort of all the jobs that were on the board yesterday.</p>
+
+<p><a href="http://i.imgur.com/tfdPgaE.png"><img src="http://i.imgur.com/tfdPgaE.png" /></a></p>
+
+<p>Basically everything on the right is good and has low scores (distances).</p>
+
+<p>Most of the jobs on the left have something anomalous in their titles. Let’s group up the anomalies by the reasons they’re broken and look over some of them.</p>
+
+<h4 id="stuff-that-just-aint-right">Stuff that just ain’t right</h4>
+
+<p>These jobs just don’t belong on the board. We need to follow up with these people and issue refunds.</p>
+
+<ol>
+  <li>Supervisor Commercial Administration Fox Networks Group</li>
+  <li>Sales Executive Risk North Americas</li>
+  <li>Associate Portfolio Manager Top Down Research</li>
+  <li>Senior Actuarial Pre-Sales Consultant</li>
+  <li>Ad Operations Coordinator</li>
+  <li>NA Customer Service Representative for Sungard Energy</li>
+  <li>Manager, Curation</li>
+</ol>
+
+<h4 id="just-terrible-titles">Just Terrible Titles</h4>
+
+<p>These jobs would belong, but the titles chosen were pretty bad. Misspellings, too many abbreviations, etc. We need to follow up with our customers about these titles to improve them.</p>
+
+<ol>
+  <li>Javascript Devlopers Gibraltar</li>
+  <li>Sr Sys Admin Tech Oper Aux Svcs</li>
+  <li>VR/AR Developer</li>
+</ol>
+
+<h4 id="duplicate-information">Duplicate Information</h4>
+
+<p><img src="http://i.imgur.com/lUUTeNX.png" alt="Duplicate Information" /></p>
+
+<p>Anywhere you see the title for a job on <a href="http://stackoverflow.com">Stack Overflow</a> or <a href="http://careers.stackoverflow.com">Careers</a> we also show you things like the location of the job, whether it’s remote or not, and the company’s name. These titles duplicate that information. We need to follow up with our customers to improve them.</p>
+
+<ol>
+  <li>Delivery Manager, Trade Me, New Zealand</li>
+  <li>Visualization Developer, Calgary</li>
+  <li>Technical Expert Hyderabad</li>
+  <li>Technical Expert Pune</li>
+  <li>Technical Expert Chennai</li>
+  <li>Technical Expert Gurgaon</li>
+  <li>New York Solutions Architect</li>
+  <li>Sr Fullstack Eng needed for Cargurus We reach over 10MM unique visitors monthly</li>
+  <li>Sr. Tester, Sky News, West London</li>
+  <li>Chief Information Officer/CIO Audible.com</li>
+  <li>Machine Learning Engineer Part Time Remote Working Available</li>
+</ol>
+
+<h2 id="what-about-the-false-positives">What about the false positives?</h2>
+
+<p>A number of false positives are produced (this is just a sample):</p>
+
+<ol>
+  <li>Computer Vision Scientist</li>
+  <li>Mac OSX Guru</li>
+  <li>Angularjs + .NET + You</li>
+  <li>Android Developer 100% Boredom Free Zone</li>
+  <li>Java Developer 100% Boredom Free Zone</li>
+  <li>DevOps Engineer - Winner, Hottest DC Startups!!! $10M Series A</li>
+  <li>Jr. Engineer at Drizly</li>
+</ol>
+
+<p>Some of these (Computer Vision, Mac OSX) are just infrequently found on our board. Some of these people are trying to be unique (and are successful, by this analysis) so that their listing stands out.</p>
+
+<p>Guthrie goes into a bit of detail about this in a section on precision and recall in the paper. His conclusion is that this kind of anomaly detection is particularly suited to when you have a human layer of detectors as the last line of defense and want to reduce the work they have to do. An exhaustive exploration of the scores finds that all of the jobs we need to follow up on are in the top 10% when ordered descending by their anomaly scores. Setting that threshold should cut the job our humans have to do by 90%, making them happier and less bored, and improving the quality of the job board.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-02T18:28:00-04:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>6:28 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ml/'>ml</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears/" data-via="" data-counturl="http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/12/26/so-you-want-a-zillion-developers/" title="Previous Post: So you want a zillion developers&hellip;">&laquo; So you want a zillion developers&hellip;</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/09/05/a-wild-anomaly-appears-part-2-the-anomaling/" title="Next Post: A Wild Anomaly Appears! Part 2: The Anomaling">A Wild Anomaly Appears! Part 2: The Anomaling &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2014/09/02/a-wild-anomaly-appears/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

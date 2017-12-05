@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Get Your Redis &#79;n on Windows - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="TL;DR: Want a virtual machine running redis in however long it takes you to download 400MB + a little completely automated install time? Follow the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2013/01/28/get-your-redis-on-on-windows">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Get Your Redis &#79;n on Windows</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-01-28'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><strong>TL;DR</strong>: Want a virtual machine running redis in however long it takes you to download 400MB + a little completely automated install time? Follow the instructions <a href="https://github.com/JasonPunyon/redishobo">here</a> and you’ll be on your way.</p>
+
+<p>Well, it only took me a year of having this blog for me to write up something even remotely technical. But here you are, and here I am…so let’s just tone down the celebration a little bit and get on with it already.</p>
+
+<p>So…it’s hard running a dev environment sometimes. We at the <a href="http://www.stackexchange.com">Stack Exchange</a> will use anything to get the job done, but on the programmer’s side we’re mainly a windows shop. One piece of software we’ve come to know and love is <a href="http://redis.io">Redis</a> though. We love it so much we’ve got <a href="http://antirez.com/latest/0">antirez</a> on speed dial. It’s really the greatest.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Here’s where it isn’t quite the greatest though (for us): it’s really meant to run on Linux. Some people have made mostly working <a href="https://github.com/dmajkic/redis/">windows builds</a> in the past that were good enough for dev’ing on but had weird behavior when it came to background operations. They’re great and I appreciate the work they d(o</td>
+      <td>id), but they fall behind when redis bumps stable versions (it’s behind 1 stable version right now leaving out features like the Lua scripting engine). Microsoft went through the rigamarole of <a href="http://oldblog.antirez.com/post/redis-win32-msft-patch.html">patching redis</a> so that it will run on windows, but that patch isn’t getting merged to master…ever.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>So what’s a girl to do? When I’ve been on a team of one and had this kind of problem I thought to myself, “Self! Get VMWare on here, spin up a one off VM with ubuntu and just run it there! Problem Solved!” and many internal high-fives were had. But when you’re on a team of 6 (the <a href="http://careers.stackoverflow.com">Careers</a> team, plug: <a href="http://careers.stackoverflow.com/company/stack-exchange">we’re hiring</a>) that doesn’t really scale well. So what are my choices? Let’s go to the big board of options:</p>
+
+<ul>
+  <li>Just tell my teammates “Hey, spend a couple hours spinning up your own VM and hope the one you have and the one I have match up and behave exactly the same”. (HINT: No)</li>
+  <li>Check in a 10 gig VM into source control and push so the other members of the team can run it too? (HINT: NO. That’s an example of what we call the “I quit” check-in.)</li>
+</ul>
+
+<p>So how do you solve this problem?</p>
+
+<h3 id="enter-the-hobo">Enter the Hobo</h3>
+
+<p>So it turns out a bunch of other people have this problem too (WEIRD RITE?). A <a href="https://twitter.com/mitchellh">smart dude</a> decided to solve it and created <a href="http://vagrantup.com">Vagrant</a>. Vagrant is a super simple yet powerful way to create and manage a reproducible virtual dev environment. Check in a couple kB of config and you get a virtual machine (or a multiple machine environment) your whole team can run. Vagrant wraps around <a href="https://www.virtualbox.org/">Virtual Box</a> for it’s virtual machines and it’s not just for windows. It runs on Linux and Mac too. Let’s run it down.</p>
+
+<h4 id="getting-in-installed">Getting in Installed</h4>
+
+<p>Follow the <a href="http://docs.vagrantup.com/v1/docs/getting-started/index.html">startup guide</a> here. It’s basically install VirtualBox and install Vagrant.</p>
+
+<h4 id="creating-a-machine">Creating a machine</h4>
+
+<p>To create the machine, the first thing we do is create your Vagrantfile. Don’t worry…it isn’t a driter fetish. It’s just a config file that outlines how your virtual machine is setup. It’s also just a bit of ruby. Here’s the one we’re using:</p>
+
+<p>File /Users/jasonpunyon/code/jasonpunyon.github.com/source/downloads/code/get-your-redis-on-on-windows/Vagrantfile could not be found</p>
+
+<p>So first we tell Vagrant which box to use. A <a href="http://docs.vagrantup.com/v1/docs/getting-started/boxes.html">box</a> is essentially a map from a key to a file. Box names can be anything you want, in this case I just have a name telling me that it’s ubuntu’s latest 64-bit release.</p>
+
+<p>Next we have a url that points to a file. As it says in the comment there, this url points to a box file that will be downloaded if the box with the name in <code>config.vm.box</code> doesn’t exist. This is nice because it means i send the file and when my teammate runs it it will go fetch everything it needs to create the virtual machine. Brilliant. A bunch of base boxes can be found at <a href="http://vagrantbox.es">Vagrantbox.es</a>. They have many different guest operating systems and versions and such to use. Very cool.</p>
+
+<p>Next we have some port forwarding settings. Vagrant takes care of setting up the network for you, you just have to tell it what you need. So I’m just forwarding to port 6379 on the guest machine (the default port on which redis runs) from port 6379 on my host machine.</p>
+
+<p>Next I <a href="http://docs.vagrantup.com/v1/docs/config/vm/customize.html">customize</a> the vm to have a gig of memory instead of whatever the base box has by default.</p>
+
+<p>So that’s it for the configuration the box. The last line runs a provisioner which will setup the box once it’s running. There are a number of provisioners to choose from including Puppet, Chef and shell. This was the gotcha for me when I was doing it the first time. The docs list the provisioners in this order…</p>
+
+<p><img class="center" src="http://i.imgur.com/K8OIqlD.png" /></p>
+
+<p>So I spent an hour or two trying to grok the chef and puppet docs and ended up getting frustrated. Those systems have a bunch of abstractions in them which probably make them great for doing sys-adminny type stuff but in my head I was screaming “AAAARRRGH. JUST LET ME RUN A FUCKING SHELL SCRIPT!”. Of course I go back to the vagrant docs after that, look an inch or two down and feel like an idiot. I do wish the bullet points there went in order of increasing complexity though.</p>
+
+<p>Long story short, the provisioner just executes the specified shell script on the guest box after it boots up.</p>
+
+<h4 id="shellack-it">Shellack It</h4>
+
+<p>So once the machine boots up what do we want it to do? Well, this:</p>
+
+<p>File /Users/jasonpunyon/code/jasonpunyon.github.com/source/downloads/code/get-your-redis-on-on-windows/init.sh could not be found</p>
+
+<p>So first we make the directories where redis will live. Then we go to the top level one, download and extract the code for the version of redis we’re interested in and build it. Then we copy the resulting executables to their final home in <code>/opt/redis/bin</code>.</p>
+
+<p>Next we copy an init.d script to where it needs to be, then we copy the redis configuration to where it lives. Add a redis user, start redis and we’re all finished.</p>
+
+<p>You might be asking “How did that init.d script and redis configuration get into the vagrant directory on the guest box?”</p>
+
+<p>The way you run vagrant is by going to the directory where the Vagrantfile lives and typing <code>vagrant up</code>. That starts the whole ball rolling. When vagrant starts up your VM, it automatically shares the directory where the Vagrantfile is with the guest box at <code>/vagrant</code> on the guest box. It’s a magical default behavior.</p>
+
+<h3 id="so-thats-pretty-much-it">So that’s pretty much it</h3>
+
+<p>Well, for now anyway. Vagrant can be used to setup multiple machine environments (which I might do next to test out an elasticsearch cluster for Careers). It has many more bells and whistles to keep your virtual dev environment running lean and mean. I’ve been super impressed with just how easy it is to work with (total home grown code to get my redis VM up was 31 lines, 15 of which were the shell script for installing redis) and bonus everyone on my team thinks I’m a hero. It’s that magical.</p>
+
+<p>+1 Vagrant…+1.</p>
+
+<h5 id="appendix">Appendix</h5>
+
+<p>This is the init.d script I used which I cribbed from <a href="http://www.ianlewis.org/en/redis-initd-script">Ian Lewis</a>.</p>
+
+<p>File /Users/jasonpunyon/code/jasonpunyon.github.com/source/downloads/code/get-your-redis-on-on-windows/redis.init.d could not be found</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2013-01-28'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>12:00 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/how-to/'>how-to</a>, <a class='category' href='/blog/categories/redis/'>redis</a>, <a class='category' href='/blog/categories/vagrant/'>vagrant</a>, <a class='category' href='/blog/categories/virtualization/'>virtualization</a>, <a class='category' href='/blog/categories/windows/'>windows</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2013/01/28/get-your-redis-on-on-windows/" data-via="" data-counturl="http://jasonpunyon.com/blog/2013/01/28/get-your-redis-on-on-windows/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/20/geographys-the-fuck/" title="Previous Post: Geography's The Fuck.">&laquo; Geography&#8217;s The Fuck.</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/31/things-that-were-i-to-unfortunately-wake-up-tomorrow-as-a-recruiter-i-would-never-do/" title="Next Post: Things that, were I to unfortunately wake up tomorrow as a recruiter, I would never do">Things that, were I to unfortunately wake up tomorrow as a recruiter, I would never do &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2013/01/28/get-your-redis-on-on-windows/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2013/01/28/get-your-redis-on-on-windows/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

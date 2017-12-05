@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Providence | Jason Punyon]]></title>
+  <link href="http://jasonpunyon.com/blog/categories/providence/atom.xml" rel="self"/>
+  <link href="http://jasonpunyon.com/"/>
+  <updated>2017-12-05T01:58:28-05:00</updated>
+  <id>http://jasonpunyon.com/</id>
+  <author>
+    <name><![CDATA[Jason Punyon]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Providence: Testing and Results]]></title>
+    <link href="http://jasonpunyon.com/blog/2015/02/05/providence-testing-and-results/"/>
+    <updated>2015-02-05T08:38:00-05:00</updated>
+    <id>http://jasonpunyon.com/blog/2015/02/05/providence-testing-and-results</id>
+    <content type="html"><![CDATA[<p><em>This post is part of a series on the Providence project at Stack Exchange.  The first post can be found <a href="http://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/">here</a>.</em></p>
+
+<p>The Providence project was motivated by our desire to better understand our users at Stack Exchange. So we think we’ve figured out what kind of <a href="http://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/">developers come to our sites</a>, and <a href="http://kevinmontrose.com/2015/01/29/providence-what-technologies-do-you-know/">what technologies they’re using</a>. Then we figured out a way to combine all our features into the <a href="http://kevinmontrose.com/2015/02/04/providence-matching-people-to-jobs/">Value Function</a>. How did we test these features?</p>
+
+<p>After each feature worked in the clean room (it passed the muster on the training, validation, and test sets we’d labeled) we had to drop it into some real-world mud to try and move a needle. Please attempt to contain your surprise as I tell you we chose to use ads as our mud puddle, and click-through rate as our needle.</p>
+
+<p><img class="center" src="http://i.imgur.com/FkWbS9y.png"></p>
+
+<p>The particular ads we wanted to use were the Careers Job Ads that run in the sidebar of Stack Overflow. Last we left Careers Job Ads, we knew that <a href="http://jasonpunyon.com/blog/2013/01/20/geographys-the-fuck/">geography</a> was by far the most important feature we could use to select jobs to show you in the ads. We’ve done some visual updates since then, but the job selection algorithm has remained unchanged.</p>
+
+<p style="text-align:center">
+<img src="http://i.imgur.com/kl5MRME.png"> <img src="http://i.imgur.com/qEJeg1b.png">
+</p>
+
+<p>We had a number of features in the pipeline at this point that were untested in real-world conditions. Major Dev Kinds, Minor Dev Kinds, Tech Stacks and Job Tags were the individual features we had to test. We did those first and then the final test was for the Value Function that combined each of those individual features and geography. Each test had these phases:</p>
+
+<h3 id="labeling-party-the-jobening">Labeling Party: The Jobening</h3>
+
+<p>We had a model for users, but we weren’t going to model jobs at the same time because then we wouldn’t know whether we were testing the user model or the job model. We also needed the cleanest labels on jobs that we could get which meant good ol’ fashioned home grown fresh squeezed human labels. Gotta give a big shout out to the developers at Stack Exchange for giving us their time to label each data set.</p>
+
+<h3 id="pre-analysis-and-experiment-design">Pre-analysis and Experiment Design</h3>
+
+<p>This is a thing we’re getting more and more into here. We’ve wasted a lot of cycles on tests and ideas that would’ve been avoidable if we’d just looked at the data ahead of time. We needed to know approximately how many impressions we were going to get in the test groups so we would know how long we’d have to wait for the A/B results to converge. If it was going to take months for the results to converge for one of these experiments, we’d be better off just doing a different experiment. We had to know when we were going to have to give up controlling for important factors like geography in order to get enough data points in a bucket.</p>
+
+<h3 id="turning-it-up">Turning it up</h3>
+
+<p>Once we knew how long we’d have to wait, we did some easing in. We’d run the test at 1% for a day to work out any bugs, monitor the early impression distributions and click-through rates to make sure they weren’t getting completely hosed and that we were also measuring correctly. Then we’d slowly ramp it up during the second day to 100% of usable impressions.</p>
+
+<h3 id="wait">Wait</h3>
+
+<p><img class="center" src="http://i.imgur.com/L77yMSg.gif" title="Just watching the hours tick byyyyyyyyyyyyy…" ></p>
+
+<h3 id="post-analysis">Post Analysis</h3>
+
+<p>At this point we’d have click-through rates that had supposedly converged, but it wasn’t enough that CTR just went up. We’d also have to make sure that gains on one subgroup weren’t at an unreasonable expense to the other groups. We called these checks “Degeneracy Passes”.</p>
+
+<p>By the end, we were able to get through about a test per week. By the luck o’ the data scientist we even got some decent results.</p>
+
+<h2 id="results">Results</h2>
+
+<p>The Value Function performs pretty admirably in comparison to the geography based targeting we were using before. We saw ~27% lift.</p>
+
+<p>Looking at CTR improvement by geography, we found that jobs closer to the user improved less, confirming our previous experiments that geography is pretty important. Inside 60 miles we saw ~17% lift picking jobs using Value Function. Outside 60 miles we saw even larger gains.</p>
+
+<p><img class="center" src="http://i.imgur.com/u1orDz3.png"></p>
+
+<p>Looking at jobs by some popular dev kinds we saw the following gains:</p>
+
+<p><img class="center" src="http://i.imgur.com/GkLcbZI.png"></p>
+
+<p>It wasn’t all kitten whispers and tickle fights. Desktop OSX jobs lost about 6% of their clicks, but we only had 9 of those jobs in the test. Similarly, SharePoint Integration jobs lost 100% of their clicks in the test, but there were only 3 of those jobs. I guess we’ll just have to live with those terrible blemishes for now.</p>
+
+<p>Looking at jobs with a smattering of popular tags we saw these gains:</p>
+
+<p><img class="center" src="http://i.imgur.com/sE3x6Bl.png"></p>
+
+<p>Node really stands out there (I think we just got lucky), but we were pretty happy with all those gains. We didn’t find any losers among tags used on more than 50 jobs.</p>
+
+<p><em>Next up: <a href="http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/">The Architecture of Providence</a></em></p>
+]]></content>
+  </entry>
+  
+</feed>

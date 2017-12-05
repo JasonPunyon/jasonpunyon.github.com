@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Providence: Failure Is Always an Option - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="This post is part of a series on the Providence project at Stack Exchange. The first post can be found here. The last five blog posts have been a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2015/02/12/providence-failure-is-always-an-option">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Providence: Failure Is Always an Option</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-12T15:42:38-05:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:42 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>This post is part of a series on the Providence project at Stack Exchange.  The first post can be found <a href="http://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/">here</a>.</em></p>
+
+<p><a href="http://kevinmontrose.com/2015/01/27/providence-machine-learning-at-stack-exchange/">The</a> <a href="http://kevinmontrose.com/2015/01/29/providence-what-technologies-do-you-know/">last</a> <a href="http://kevinmontrose.com/2015/02/04/providence-matching-people-to-jobs/">five</a> <a href="http://jasonpunyon.com/blog/2015/02/05/providence-testing-and-results/">blog</a> <a href="http://jasonpunyon.com/blog/2015/02/10/providence-architecture-and-performance/">posts</a> have been a highlight reel of Providence’s successes. Don’t be fooled, though, the road to Providence was long and winding. Let’s balance out the highlight reel with a look at some of the bumps in the road.</p>
+
+<p>I said the road was long. Let’s quantify that. The first commit to the Providence repo happened on February 13, 2014 and Providence officially shipped with <a href="http://blog.stackoverflow.com/2015/01/targeted-jobs-for-stack-overflow">Targeted Job Ads for Stack Overflow</a> on January 27, 2015. We worked on Providence for about a year.</p>
+
+<p>You read that right; we worked on Providence for about a year. I’m telling you that this system…</p>
+
+<p><img class="center" src="http://i.imgur.com/2zw1TjG.png" /></p>
+
+<p>…took a year to build. It’s kind of impressive, actually. The only <em>new</em> things on that diagram are the Daily Process, the Read API and a couple of redis instances. This certainly isn’t a big system by any means. We only sling around a few GB a day.</p>
+
+<h2 id="sowhat-happened">So…What Happened?</h2>
+
+<p>We <strong>failed slowly</strong> while <strong>solving the wrong problems</strong> trying to build a system that was <strong>too big</strong> on <strong>speculatively chosen technologies</strong>.</p>
+
+<h3 id="too-big">Too Big</h3>
+
+<p>When we started building Providence, we started with the idea that we were gonna keep data about persons for the most recent 365 days. Here’s a graph I made today:</p>
+
+<p><img class="center" src="http://i.imgur.com/ubjC9ie.png" /></p>
+
+<p>That’s showing the distribution of people we saw on February 11, 2015 by the last time we saw them. As you go further back in time the percentage of people who were last seen on that day drops off precipitously (that’s a log scale). Keeping a year of data around makes absolutely no sense if you have that graph. The potential benefit (a hit on an old person) is far outweighed by the operational cost of a system that could keep that much data around. We didn’t have that graph when we sized the system, we just picked a number out of the sky. Our choice of a year was an order of magitude too high.</p>
+
+<h3 id="speculative-technology-decisions">Speculative Technology Decisions</h3>
+
+<p>The problem with keeping around a year of data is that…that’s a lot of data. We decided that SQL Server, the data store we had, was inadequate based on the fact that we were going to have to do key-value lookups on hundreds of millions of keys. We never really questioned that assertion or anything, it just seemed to go without saying.</p>
+
+<p>This led us to a speculative technology decision. We “needed” a new datastore, so the task was to evaluate the ones that seemed promising. I spent about 2 weeks learning Cassandra, did some tiny proofs of concept, and without evaluating other options (aside from reading feature lists) decided that it was the way to go.</p>
+
+<p>The terribleness of this decision would be borne out over the ensuing months, but far more terrible was this way of making decisions. Based on my most cursory of investigations of one technology I, with what can only be described as froth, was able to convince Stack Exchange Engineering and Site Reliability we needed to build a cluster of machines to run a distributed data store that I had all of two weeks of experience with. And we did it.</p>
+
+<p>While I certainly appreciate the confidence, this was madness.</p>
+
+<p>Another decision we made, apropos of nothing, was that we needed to update predictions for people every 15 minutes. This led us to decide on a Windows Service architecture, which wasn’t really our forte. In addition to that, we also were pretty frothy about using C#’s async/await as TheWay™ to do things, and we had <em>some</em> experience there but not a bunch.</p>
+
+<h3 id="solving-the-wrong-problems">Solving the wrong problems</h3>
+
+<p>Early on we spent a good deal of time on the offline machine learning aspect of Providence. This was one of the few things we got right. Even if we had all our other problems nailed down, Providence still wouldn’t be anything if the underlying models didn’t work. We knew the models had to work and that they were the hardest part of the problem at the beginning, so that’s what we worked on.</p>
+
+<p>The Developer Kinds model was finished with offline testing in June. The next step was to get it tested in the real world. That next step didn’t happen for <em>four</em> months. The linchpin of the system sat on the shelf untested for four months. Why?</p>
+
+<p>Some of the fail of speculative technology decisions is that you don’t realize exactly how much you’re giving up by striking out in a new direction. We put years of work into our regular web application architecture and it shows. Migrations, builds, deployment, client libraries, all that incidental complexity is handled just the way we like. Multiple SRE’s and devs know how most systems work and can troubleshoot independently. I wouldn’t go so far as to say as it’s <em>finely</em> honed, but it’s definitely honed.</p>
+
+<p>It was folly to think that things would go so smoothly with new-and-shiny-everything. The Windows Service + async/await + new data store equation always added up to more incidental work. We needed to make deploying Windows Services work. Cassandra needed migrations. Our regular perf tools like MiniProfiler don’t work right with async/await, so we needed to learn about <a href="http://blogs.msdn.com/b/pfxteam/archive/2012/06/15/executioncontext-vs-synchronizationcontext.aspx">flowing execution context</a>. If Cassandra performance wasn’t what we needed it to be we were in a whole new world of pain, stuck debugging a distributed data store we had little experience with.</p>
+
+<p>And then it happened.</p>
+<div style="text-align:center">
+<blockquote class="twitter-tweet" lang="en"><p>The day we lost our innocence. <a href="http://t.co/N435V3qgxG">pic.twitter.com/N435V3qgxG</a></p>&mdash; Jason Punyon (@JasonPunyon) <a href="https://twitter.com/JasonPunyon/status/467290879569719296">May 16, 2014</a></blockquote>
+<script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<p>The datacenter screwed up and power to our systems was cut unceremoniously. When we came back up Cassandra was in an odd state. We tried repairing, and anything else we thought would fix it but ultimately got nowhere. After a few days we found a <a href="https://issues.apache.org/jira/browse/CASSANDRA-7144">bug report</a> that exhibited similar behavior. It’d been filed a few weeks earlier, but there was no repro case. The ultimate cause wasn’t found until a month after the original bug report was filed.</p>
+
+<p><img class="center" src="http://i.imgur.com/hxm6US8.png" /></p>
+
+<p>This was the nail in the coffin for Cassandra. The fact that we got bitten by a bug in someone else’s software wasn’t hard to swallow. Bugs happen. It was the fact that were we in production, we’d have eaten a mystery outage for a month before someone was able to come up with an answer. It just proved how not ready we were with it and it made us uncomfortable. So we moved on.</p>
+
+<h3 id="speculative-technology-decisions-redux">Speculative Technology Decisions Redux</h3>
+
+<p>So what do you do when a bad technology choice bites you in the ass after months of work? You decide to use an existing technology in a completely unproven way and see if that works any better, of course.</p>
+
+<p><img class="center" src="http://i.imgur.com/TIN7gEv.png" /></p>
+
+<p>We still “knew” our main tools for storing data weren’t going to work. But we’d also just been bitten and we wanted to use something closer to us, not <em>as</em> crazy, something we had more experience with. So we chose elasticsearch.</p>
+
+<h3 id="solving-the-wrong-problems-redux">Solving The Wrong Problems Redux</h3>
+
+<p>And lo, we repeated all the same wrong problem solving with elasticsearch. There was a smidge less work because elasticsearch was already part of our infrastructure. Our operational issues ended up being just as bad though. We were auditing the system to figure out why our data wasn’t as we expected it and rediscovered a <a href="https://github.com/elasticsearch/elasticsearch/issues/2665">more-than-a-year-old bug</a>, that HTTP Pipelining didn’t work. We turned pipelining off and while elasticsearch acted correctly we saw a marked performance drop. We tried to optimize for another few weeks but ultimately threw in the towel.</p>
+
+<p><img class="center" src="http://i.imgur.com/Ihf8OxY.png" /></p>
+
+<h3 id="failing-slowly">Failing slowly</h3>
+
+<p>Bad planning, bad tech decisions, and a propensity for sinking weeks on things only incidental to the problem all adds up to excruciatingly…slow…failure.
+Failing is only kind of bad. Failing slowly, particularly as slowly as we were failing, and having absolutely nothing to show for it is <em>so</em> much worse. We spent months on datastores without thinking to ourselves “Wow, this hurts a lot. Maybe we shouldn’t do this.” We spent time rewriting client libraries and validating our implementations. We held off throwing in the towel until way too late way too often.</p>
+
+<p>At this point, now mid September 2014, we <em>finally</em> realized we needed to get failing fast on these models in the real world or we weren’t going to have anything to ship in January. We gave up on everything but the models, and focused on how we could get them tested as quickly as possible. We dropped back to the simplest system we could think of that would get us going: Windows task scheduler invoked console applications that write data to files on disk that are loaded into redis. We gave up on the ill-chosen “a year of data” and “updates every 15 minutes” constraints, and backed off to 6 weeks of data updated daily.</p>
+
+<p>Within <em>two weeks</em> we had real-world tests going and we got incredibly lucky. Results of the model tests were nearly universally positive.</p>
+
+<h2 id="so-whats-different-now">So what’s different now?</h2>
+
+<p>Engineering made some changes in the way we do things to try to keep Providence’s lost year from happening again. Overall we’re much more prickly about technology choices now. Near the end of last year we started doing Requests For Comment (RFCs) to help our decision making process.</p>
+
+<p>RFCs start with a problem statement, a list of people (or placeholders for people) representative of teams that are interested in the problem, and a proposed solution. RFCs publicize the problem within the company, help you to gauge interest, and solicit feedback. They are public artifacts (we just use Google Docs) that help surface the “how” of decisions, not just the “what”. It’s still early going, but I like them a lot.</p>
+
+<blockquote class="twitter-tweet" lang="en"><p>I need a stamp that reads &quot;I&#39;d Really Like This Done By Friday&quot;</p>&mdash; Kevin Montrose (@kevinmontrose) <a href="https://twitter.com/kevinmontrose/status/431536917113761792">February 6, 2014</a></blockquote>
+<script async="" src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>Kevin and I have essentially become allergic to big projects. We attempt to practice “What can get done by Friday?” driven development. Keeping things small precludes a whole class of errors like “We need a new datastore”, ‘cause that ain’t gettin’ done by Friday. It’s hard to sink a week on something you weren’t supposed to be working on when all you have is a week.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-12T15:42:38-05:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:42 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2015/02/12/providence-failure-is-always-an-option/" data-via="" data-counturl="http://jasonpunyon.com/blog/2015/02/12/providence-failure-is-always-an-option/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/10/providence-architecture-and-performance/" title="Previous Post: Providence: Architecture and Performance">&laquo; Providence: Architecture and Performance</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/07/17/trip-report-icml-2015/" title="Next Post: Trip Report: ICML 2015">Trip Report: ICML 2015 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2015/02/12/providence-failure-is-always-an-option/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2015/02/12/providence-failure-is-always-an-option/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

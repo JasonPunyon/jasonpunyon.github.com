@@ -8,8 +8,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-
-
 So, there's this bit of math called the Johnson-Lindenstrauss lemma. It makes a fairly fantastic claim. Here it is in math-speak from the original paper...
 
 {% img https://i.imgur.com/5vExomX.png %}

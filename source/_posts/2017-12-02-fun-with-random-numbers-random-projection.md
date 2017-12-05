@@ -3,10 +3,11 @@ layout: post
 title: "Fun With Random Numbers: Random Projection"
 date: 2017-12-02 12:25:46 -0500
 comments: true
-categories: a-category
 editor_options: 
   chunk_output_type: console
 ---
+
+
 
 So, there's this bit of math called the Johnson-Lindenstrauss lemma. It makes a fairly fantastic claim. Here it is in math-speak from the original paper...
 
@@ -79,7 +80,7 @@ distances = data.frame(Distance = as.numeric(distX),
                        ProjectedDistance=as.numeric(distX_projected))
 {% endhighlight %}
 
-We've projected the original 10,000 dimensions down to 692 dimensions. Let's look at a histogram of the distortion of the distances...
+We've projected the original 10,000 dimensions down to 692 dimensions. We expect that all the distances are distorted by less than 10%. Let's look at a histogram of the distortion of the distances...
 
 
 {% highlight r %}

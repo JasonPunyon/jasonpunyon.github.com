@@ -3,7 +3,6 @@ layout: post
 title: "Fun With Random Numbers: Random Projection"
 date: 2017-12-02 12:25:46 -0500
 comments: true
-categories: a-category
 editor_options: 
   chunk_output_type: console
 ---
@@ -60,7 +59,7 @@ Welcome back, again. At this point I was at a total loss. We only need ln(Number
 
 ### OK, let's do it.
 
-```{r "distances", fig.width = 10}
+```{r "distances", fig.width = 10, message=FALSE}
 library(tidyverse)
 N = 10000 #The Number of dimensions in the original space
 m = 1000  #The number of points in the dataset
@@ -82,7 +81,7 @@ distances = data.frame(Distance = as.numeric(distX),
                        ProjectedDistance=as.numeric(distX_projected))
 ```
 
-We've projected the original 10,000 dimensions down to `r n` dimensions. Let's look at a histogram of the distortion of the distances...
+We've projected the original 10,000 dimensions down to `r n` dimensions. We expect that all the distances are distorted by less than `r scales::percent(epsilon)`. Let's look at a histogram of the distortion of the distances...
 
 ```{r, depends_on="distances", fig.width = 12}
 distances %>%

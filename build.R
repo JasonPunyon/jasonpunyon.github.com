@@ -30,8 +30,8 @@ knit_folder <- function(infolder, outfolder, figsfolder, cachefolder) {
   }
 }
 
-setwd("./source")
-knitr::knit_watch(list.files("_R", recursive=TRUE), compile = function(filename) { 
+setwd("./source/_R")
+knitr::knit_watch(list.files(pattern="Rmd"), compile = function(filename) { 
   print(paste0("Updating ", filename))
-  knit_folder("_R", "_posts", "assets/", "_caches/") })
+  knit_folder(".", "../_posts", "../assets/", "../_caches/") })
 setwd("..")

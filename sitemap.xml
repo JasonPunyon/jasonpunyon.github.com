@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/</loc>
+<lastmod>2017-12-08T13:51:52-05:00</lastmod>
+</url>
+<url>
 <loc>http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/</loc>
 <lastmod>2017-12-02T12:25:46-05:00</lastmod>
 </url>
@@ -127,6 +131,12 @@
 </url>
 <url>
 <loc>http://jasonpunyon.com/blog/categories/providence/</loc>
+</url>
+<url>
+<loc>http://jasonpunyon.com/posts/2/</loc>
+</url>
+<url>
+<loc>http://jasonpunyon.com/posts/3/</loc>
 </url>
 <url>
 <loc>http://jasonpunyon.com/rol-tiny-talk/index.html</loc>

@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Fun With Random Numbers: More Random Projection - Jason Punyon</title>
+  <meta name="author" content="Jason Punyon">
+
+  
+  <meta name="description" content="Last time, we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jason Punyon" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7669206-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jason Punyon</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jasonpunyon.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Fun With Random Numbers: More Random Projection</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-12-08T13:51:52-05:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>1:51 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Last time, we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of dimensions required to preserve the distance between the points in a set is dependent only upon the number of <em>points</em> in the set and the maximum acceptable distortion set by the user. Surprisingly it does <em>not</em> depend on the original number of dimensions. The proof that random projections work is hard to understand, but the method is very simple to implement in just a few steps. To reduce the dimensionality of a set of m points in an N dimensional space:</p>
+
+<ol>
+  <li>Get your data into a m × N matrix <strong>D</strong></li>
+  <li>Choose your maximum allowable percent distortion ε</li>
+  <li>Calculate the number of dimensions for your reduced space, n = ln(m) / ε<sup>2</sup>.</li>
+  <li>Sample the entries of an N × n matrix from the standard normal distribution, <strong>R</strong>.</li>
+  <li>Multiply <strong>D</strong> by <strong>R</strong>.</li>
+</ol>
+
+<p>Today we’re going to add a couple steps to this method and find another surprising result.</p>
+
+<h3 id="lets-color-the-world">Let’s color the world</h3>
+
+<p>Let’s get some data. We’re going to work with the cities15000 dataset from <a href="http://geonames.org">geonames.org</a>. Let’s download it, clean it up, and take a look…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kr">if</span> <span class="p">(</span><span class="o">!</span><span class="kp">file.exists</span><span class="p">(</span><span class="s">&quot;~/cities15000.zip&quot;</span><span class="p">))</span> <span class="p">{</span>
+  download.file<span class="p">(</span><span class="s">&quot;http://download.geonames.org/export/dump/cities15000.zip&quot;</span><span class="p">,</span> <span class="s">&quot;~/cities15000.zip&quot;</span><span class="p">)</span>  
+  unzip<span class="p">(</span><span class="s">&quot;~/cities15000.zip&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+
+cities <span class="o">=</span> readr<span class="o">::</span>read_tsv<span class="p">(</span><span class="s">&quot;~/cities15000.txt&quot;</span><span class="p">,</span> 
+                         col_names <span class="o">=</span> <span class="kc">FALSE</span><span class="p">,</span> 
+                         col_types <span class="o">=</span> <span class="s">&quot;ccccccccccccccccccc&quot;</span><span class="p">,</span> 
+                         quote <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span> 
+  transmute<span class="p">(</span>Name <span class="o">=</span> X2<span class="p">,</span>
+            Latitude <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>X5<span class="p">),</span>
+            Longitude <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>X6<span class="p">))</span>
+
+cities <span class="o">%&gt;%</span> 
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">))</span> <span class="o">+</span> 
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">0.25</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title<span class="o">=</span><span class="s">&quot;Cities of the World, Population &gt;= 15,000&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-1-1.png" alt="center" /></p>
+
+<p>Lovely. Let’s get our data in order. We’ve got two dimensional points, and we’re going to randomly project them. Now this is weird. We’ve been talking about dimensionality <em>reduction</em> for the past post and a half, but this time we’re going to <em>increase</em> the dimensionality of our data using random projection. Don’t worry, I promise everything’s gonna be fine. Let’s get our projection on.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">m <span class="o">=</span> <span class="kp">nrow</span><span class="p">(</span>cities<span class="p">)</span> <span class="c1">#Number of points</span>
+N <span class="o">=</span> <span class="m">2</span>            <span class="c1">#Original Dimensionality</span>
+n <span class="o">=</span> <span class="m">32</span>           <span class="c1">#New Dimensionality</span>
+
+D <span class="o">=</span> cities <span class="o">%&gt;%</span> select<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span>
+R <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">)</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)</span>
+
+projected <span class="o">=</span> D <span class="o">%*%</span> R</code></pre></div>
+
+<p>Everything is the same as before. We got the data in the data matrix, we sampled the random matrix, we multiplied. We’ve projected our 2 dimensional data up to 32 dimensions. Let’s take a look at one of these points in the projected space…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">projected<span class="p">[</span><span class="m">1</span><span class="p">,]</span></code></pre></div>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">##  [1]  10.69272814   5.85547523  -2.69259970  11.69982579  -8.09947221
+##  [6]   9.73387187  -6.21878316   8.23639838  -0.04556335  -8.63407293
+## [11]   5.86008396  14.05194007   3.21997116  11.88770012  -3.49988214
+## [16]  -8.06132757 -15.38181868  10.03085341  -3.45489811   8.37602080
+## [21]   1.60290140   4.04197519   1.06388562   9.57580297   1.93319542
+## [26]   3.26073281  -1.43515837  -4.95111631  -1.47457978  -2.04400312
+## [31]  -0.62328955   3.22069399</code></pre></div>
+
+<p>OK, so each row in the projected matrix has 32 numbers. The next step in the process is to turn each row of 32 numbers into 32 bits using their signs. Positive numbers will map to 1s and negative numbers will map to 0s.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">projected_bits <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="kp">as.numeric</span><span class="p">(</span>projected <span class="o">&gt;=</span> <span class="m">0</span><span class="p">),</span> m<span class="p">,</span> n<span class="p">)</span> <span class="c1">##Compare with zero to get the sign of each number...</span>
+projected_bits<span class="p">[</span><span class="m">1</span><span class="p">,]</span> <span class="c1">##And now we have 1s and 0s</span></code></pre></div>
+
+<div class="highlight"><pre><code class="language-text" data-lang="text">##  [1] 1 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 0 0 1</code></pre></div>
+
+<p>Our projected data is now a collection of 32-bit strings, which I’m going to call hashes. Let’s visualize the data by coloring the points on the original map by their projected hashes.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">cities_with_hashes <span class="o">=</span> cities <span class="o">%&gt;%</span> bind_cols<span class="p">(</span>Hash <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>projected_bits<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="kp">paste0</span><span class="p">,</span> collapse<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">))</span>
+cities_with_hashes <span class="o">%&gt;%</span> 
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> color<span class="o">=</span>Hash<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span> 
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  scale_color_manual<span class="p">(</span>palette <span class="o">=</span> jason_colors<span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title<span class="o">=</span><span class="s">&quot;Cities of the World, Population &gt;= 15,000&quot;</span><span class="p">,</span>
+       subtitle<span class="o">=</span><span class="s">&quot;Colored by projected hash&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-5-1.png" alt="center" /></p>
+
+<p>Well well well. It looks like there’s some radial symmetry going on. It’s a little hard to see though. Let’s fill in all the space to make it a bit more apparent…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">all_space <span class="o">=</span> crossing<span class="p">(</span>Longitude <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">-180</span><span class="p">,</span> <span class="m">180</span><span class="p">,</span> <span class="m">.5</span><span class="p">),</span>
+                     Latitude <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">-90</span><span class="p">,</span> <span class="m">90</span><span class="p">,</span> <span class="m">.5</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>Id <span class="o">=</span> row_number<span class="p">())</span>
+all_space_projected <span class="o">=</span> all_space <span class="o">%&gt;%</span> select<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span> <span class="o">%*%</span> R
+
+all_space_projected_bits <span class="o">=</span> all_space_projected <span class="o">&gt;=</span> <span class="m">0</span>
+all_space_with_hashes <span class="o">=</span> all_space <span class="o">%&gt;%</span> bind_cols<span class="p">(</span>Hash <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span><span class="kt">matrix</span><span class="p">(</span><span class="kp">as.numeric</span><span class="p">(</span>all_space_projected_bits<span class="p">),</span> <span class="kp">nrow</span><span class="p">(</span>all_space<span class="p">),</span> n<span class="p">),</span> <span class="m">1</span><span class="p">,</span> <span class="kp">paste0</span><span class="p">,</span> collapse<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">))</span>
+
+all_space_with_hashes <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> color<span class="o">=</span>Hash<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span> 
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  scale_color_manual<span class="p">(</span>palette <span class="o">=</span> jason_colors<span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title<span class="o">=</span><span class="s">&quot;Space of the World&quot;</span><span class="p">,</span>
+       subtitle<span class="o">=</span><span class="s">&quot;Colored by projected hash&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-6-1.png" alt="center" /></p>
+
+<p>My my my. So our modified random projection scheme has organized 2d space into these spoke-like regions, and all the points in each spoke have the same hash (note: duplicate colored regions are false duplicates, the color palette we’re using is only so large). That’s rather surprising.</p>
+
+<h3 id="brace-yourself">Brace Yourself</h3>
+
+<p>What’s more surprising is that the spokes next to eachother have hashes that are closer to eachother than spokes that are farther away. What do we mean by close? We’ll use the Hamming distance, which is just a fancy way of saying “count the bits where two hashes differ”. To calculate the Hamming distance between two hashes we’ll sum the bits of the XOR of the two hashes.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">new_york_index <span class="o">=</span> all_space <span class="o">%&gt;%</span> filter<span class="p">(</span>Longitude <span class="o">==</span> <span class="m">-74</span><span class="p">,</span> Latitude <span class="o">==</span> <span class="m">41</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="m">.</span><span class="o">$</span>Id
+new_york_bits <span class="o">=</span> all_space_projected_bits<span class="p">[</span>new_york_index<span class="p">,]</span>
+
+distances <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>all_space_projected_bits<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="kp">row</span><span class="p">)</span> <span class="p">{</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">xor</span><span class="p">(</span>new_york_bits<span class="p">,</span> <span class="kp">row</span><span class="p">))</span> <span class="p">})</span></code></pre></div>
+
+<p>We picked New York City as our reference point, and calculated the Hamming distance to all other points in the space…let’s plot.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">all_space <span class="o">%&gt;%</span> 
+  bind_cols<span class="p">(</span>HammingDistanceToNewYork <span class="o">=</span> distances<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> color<span class="o">=</span>HammingDistanceToNewYork<span class="p">))</span> <span class="o">+</span> 
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  scale_color_viridis<span class="p">()</span> <span class="o">+</span> 
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">-74</span><span class="p">,</span> y<span class="o">=</span><span class="m">41</span><span class="p">),</span> color<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="m">-74</span><span class="p">,</span> <span class="m">50</span><span class="p">,</span> label<span class="o">=</span><span class="s">&quot;New York City&quot;</span><span class="p">,</span> color<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">,</span> size<span class="o">=</span><span class="m">7</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-8-1.png" alt="center" /></p>
+
+<p>Holy moly. What’s going on here? Black means that point has a low hamming distance to New York, while yellow means that point has a high Hamming distance to New York. Our random projection method has transformed our original 2d coordinates into a <strong>locality sensitive hash</strong>. Points that are close to each other in real space, have hashes that are similar to each other in Hamming space. Let’s look at another city, Rio de Janeiro…</p>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-9-1.png" alt="center" /></p>
+
+<p>Still works. Pretty amazing.</p>
+
+<h3 id="lets-fix-it">Let’s fix it!</h3>
+
+<p>What do you mean, fix it!? It is, amazingly, not broken in the first place! Well, having space organized into spokes is nice and all, but that’s not really how we think of closeness as humans. Can we alter the method to change the shape of the regions so that the version of closeness the hashes see is more like the closeness that we think of as humans? The answer is yes.</p>
+
+<p>Now I don’t have any real theoretical motivation for what I did here, I just thought really hard and, luckily, I ended up where I wanted to be. The thing I observed is that all the spokes emanate from the origin because that’s the point by which all the other points in the space are defined. The Latitude of a point is defined in reference to the origin, which has Latitude 0. Likewise for the longitude. My thought was to extend the definition of each point in the space to be in reference to not just the origin, but another point as well. That means instead of running the random projection on just a 2d point, I need to come up with some more dimensions. So in addition to the original Latitude and Longitude of the points, I’m going to add Longitude+180, Longitude-180, Latitude+90, and Latitude-90. If we rerun the random projection and plot the hashes of each point…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">N <span class="o">=</span> <span class="m">6</span>
+n <span class="o">=</span> <span class="m">32</span>
+R <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span>N <span class="o">*</span> n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> N<span class="p">,</span> n<span class="p">)</span> <span class="o">/</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)</span>
+
+all_space <span class="o">=</span> crossing<span class="p">(</span>Longitude <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">-180</span><span class="p">,</span> <span class="m">180</span><span class="p">,</span> <span class="m">.5</span><span class="p">),</span>
+                     Latitude <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">-90</span><span class="p">,</span> <span class="m">90</span><span class="p">,</span> <span class="m">.5</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>Id <span class="o">=</span> row_number<span class="p">(),</span> 
+         Lon2 <span class="o">=</span> Longitude <span class="o">+</span> <span class="m">180</span><span class="p">,</span> Lat2 <span class="o">=</span> Latitude<span class="m">+90</span><span class="p">,</span>
+         Lon3 <span class="o">=</span> Longitude <span class="o">-</span> <span class="m">180</span><span class="p">,</span> Lat3 <span class="o">=</span> Latitude<span class="m">-90</span><span class="p">)</span>
+all_space_projected <span class="o">=</span> all_space <span class="o">%&gt;%</span> select<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> Lon2<span class="p">,</span> Lat2<span class="p">,</span> Lon3<span class="p">,</span> Lat3<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span> <span class="o">%*%</span> R
+
+all_space_projected_bits <span class="o">=</span> all_space_projected <span class="o">&gt;=</span> <span class="m">0</span>
+all_space_with_hashes <span class="o">=</span> all_space <span class="o">%&gt;%</span> bind_cols<span class="p">(</span>Hash <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span><span class="kt">matrix</span><span class="p">(</span><span class="kp">as.numeric</span><span class="p">(</span>all_space_projected_bits<span class="p">),</span> <span class="kp">nrow</span><span class="p">(</span>all_space<span class="p">),</span> n<span class="p">),</span> <span class="m">1</span><span class="p">,</span> <span class="kp">paste0</span><span class="p">,</span> collapse<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">))</span>
+
+all_space_with_hashes <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> color<span class="o">=</span>Hash<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span> 
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span> <span class="o">+</span> 
+  scale_color_manual<span class="p">(</span>palette <span class="o">=</span> jason_colors<span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title<span class="o">=</span><span class="s">&quot;Space of the World&quot;</span><span class="p">,</span>
+       subtitle<span class="o">=</span><span class="s">&quot;Colored by projected hash&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-10-1.png" alt="center" /></p>
+
+<p>OK, so that’s kinda big and blocky. Let’s up the number of dimensions in the projected space from 32 to 128…</p>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-11-1.png" alt="center" /></p>
+
+<p>OK, a bit less blocky…1024?</p>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-12-1.png" alt="center" /></p>
+
+<p>Alright alright alright. Now we changed the method…did we lose the locality sensitivity? If we do the hamming-distance-to-new-york dance again…</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">new_york_index <span class="o">=</span> all_space <span class="o">%&gt;%</span> filter<span class="p">(</span>Longitude <span class="o">==</span> <span class="m">-74</span><span class="p">,</span> Latitude <span class="o">==</span> <span class="m">41</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="m">.</span><span class="o">$</span>Id
+new_york_bits <span class="o">=</span> all_space_projected_bits<span class="p">[</span>new_york_index<span class="p">,]</span>
+
+distances <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>all_space_projected_bits<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="kp">row</span><span class="p">)</span> <span class="p">{</span> <span class="kp">sum</span><span class="p">(</span><span class="kp">xor</span><span class="p">(</span>new_york_bits<span class="p">,</span> <span class="kp">row</span><span class="p">))</span> <span class="p">})</span>
+bound <span class="o">=</span> all_space <span class="o">%&gt;%</span> 
+  bind_cols<span class="p">(</span>HammingDistanceToNewYork <span class="o">=</span> distances<span class="p">)</span>
+
+bound <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Longitude<span class="p">,</span> Latitude<span class="p">,</span> color<span class="o">=</span>HammingDistanceToNewYork<span class="p">))</span> <span class="o">+</span> 
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  scale_color_viridis<span class="p">()</span> <span class="o">+</span> 
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">-74</span><span class="p">,</span> y<span class="o">=</span><span class="m">41</span><span class="p">),</span> color<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="m">-74</span><span class="p">,</span> <span class="m">50</span><span class="p">,</span> label<span class="o">=</span><span class="s">&quot;New York City&quot;</span><span class="p">,</span> color<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">,</span> size<span class="o">=</span><span class="m">7</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span></code></pre></div>
+
+<p><img src="/../assets/2017-12-08-fun-with-random-numbers-more-random-projection/unnamed-chunk-13-1.png" alt="center" /></p>
+
+<p>We find out that no, we haven’t. Dark points are closer to New York, brighter ones are farther away. I wanted to see what it would look like to walk New York’s nearest neighbors in order in the hash space so I made this video.</p>
+
+<iframe width="770" height="385" src="https://www.youtube.com/embed/-Uk7lXia3m4" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen=""></iframe>
+
+<p>I remain flabbergasted by what you can do with random projection. That it works at all is surprising, and that my handwavey modifications didn’t break it is doubly so.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jason Punyon</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2017-12-08T13:51:52-05:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>1:51 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/" data-via="" data-counturl="http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/12/02/fun-with-random-numbers-random-projection/" title="Previous Post: Fun With Random Numbers: Random Projection">&laquo; Fun With Random Numbers: Random Projection</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I&#8217;m Jason</h1>
+  <p>
+  	I work at <a href="http://stackoverflow.com">Stack Overflow</a> on the Data Science team. I&#8217;ve also spent a lot of time on <a href="http://careers.stackoverflow.com">Stack Overflow Careers</a>.
+  </p>
+  <p>
+  	On Twitter I&#8217;m <a href="http://twitter.com/JasonPunyon">@JasonPunyon</a><br />
+  	On Stack Overflow I&#8217;m <a href="http://stackoverflow.com/users/6212">Jason Punyon</a><br />
+  	On Github I&#8217;m <a href="http://github.com/jasonpunyon">JasonPunyon</a><br />
+  	You can see my CV <a href="http://stackoverflow.com/cv/jasonpunyon">here</a>
+  </p>
+  <p>
+	<a href="http://stackoverflow.com/users/6212/jason-punyon"><img src="http://stackoverflow.com/users/flair/6212.png" width="208" height="58" alt="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Jason Punyon at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
+  </p>
+</section><section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/08/fun-with-random-numbers-more-random-projection/">Fun With Random Numbers: More Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/17/trip-report-icml-2015/">Trip Report: ICML 2015</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/12/providence-failure-is-always-an-option/">Providence: Failure Is Always an Option</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+	<h1>Twitter</h1>
+	<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/JasonPunyon" data-widget-id="507267843440664576">Tweets by @JasonPunyon</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Jason Punyon -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jasonpunyon';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/';
+        var disqus_url = 'http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

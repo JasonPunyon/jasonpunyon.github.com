@@ -9,7 +9,7 @@
   <meta name="author" content="Jason Punyon">
 
   
-  <meta name="description" content="I would never send e-mails that make potential candidates for a position think I’m not effective at finding potential candidates for a position. &hellip;">
+  <meta name="description" content="So, calculating π is a fun pastime for people it seems. There are many ways to do it, but this one is mine. It’s 12 lines of code, it wastes a lot of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/03/fun-with-rngs-calculating-pi/">Fun With RNGs: Calculating &#960;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-05-03T15:41:00-04:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2013</span></span> <span class='time'>3:41 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So, calculating π is a fun pastime for people it seems. There are many ways to do it, but this one is mine. It’s 12 lines of code, it wastes a lot of electricity and it takes forever to converge.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="csharp"><span class="line"><span class="k">public</span> <span class="kt">double</span> <span class="nf">EstimatePi</span><span class="p">(</span><span class="kt">int</span> <span class="n">numberOfTrials</span><span class="p">)</span>
+</span><span class="line"><span class="p">{</span>
+</span><span class="line">	<span class="kt">var</span> <span class="n">r</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Random</span><span class="p">();</span>
+</span><span class="line">	
+</span><span class="line">	<span class="k">return</span> <span class="m">4</span> <span class="p">*</span> <span class="n">Enumerable</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">numberOfTrials</span><span class="p">)</span>
+</span><span class="line">					     <span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span><span class="line">										<span class="kt">var</span> <span class="n">x</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">NextDouble</span><span class="p">();</span>
+</span><span class="line">										<span class="kt">var</span> <span class="n">y</span> <span class="p">=</span> <span class="n">r</span><span class="p">.</span><span class="n">NextDouble</span><span class="p">();</span>
+</span><span class="line">										<span class="k">return</span> <span class="n">Math</span><span class="p">.</span><span class="n">Pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="p">+</span> <span class="n">Math</span><span class="p">.</span><span class="n">Pow</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="p">&lt;</span> <span class="m">1</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">;</span>
+</span><span class="line">									  <span class="p">})</span>
+</span><span class="line">						 <span class="p">.</span><span class="n">Average</span><span class="p">();</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>What’s going on here? First we initialize our random number generator. Then for 1 to the number of trials we specify in the argument we do the following:</p>
+
+<ol>
+  <li>Generate two random numbers between 0 and 1. We use one for the X coordinate and one for the Y coordinate of a point.</li>
+  <li>We test if the point (X,Y) is inside the unit circle by using the formula for a circle (x^2 + y^2 = r^2).</li>
+  <li>If the point (X,Y) is inside the circle we return a 1 otherwise a zero.</li>
+</ol>
+
+<p>Then we take the average of all those zeros and ones and multiply it by a magic number, 4. We have to multiply by four because the points we generate are all in the upper right quadrant of the xy-plane.</p>
+
+<p>How bad is it? Here’s some output:</p>
+
+<pre><code>	Number Of Trials       Estimate of Pi
+   			10					3.6
+        100					3.24
+        1000				3.156
+        10000				3.1856
+        100000				3.14064
+        1000000				3.139544
+        10000000			3.1426372
+        100000000			3.14183268
+        1000000000			3.141593 (Took 2:23 to complete)
+</code></pre>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -808,53 +887,9 @@ Jason Punyon aka “The Big Green J”</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/11/employee-referral-bonuses-are-pants-on-head-stupid/">Employee Referral Bonuses Are Pants on Head Stupid</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-05-11T06:59:00-04:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>6:59 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>So, I read <a href="http://jzhwu.blogspot.com/2012/05/im-former-miso-engineer-and-founders.html">this</a> story yesterday about the employee who referred a friend and got screwed out of his referral bonus. People on Hacker News argued about “Name and Shame” and who was right and wrong but the first thought that popped into my head was “employee referral bonuses are pants on head stupid.”</p>
-
-<p>Forget about this particular case and the collateral problems it’s causing. The employee referral bonus is just an intrinsically bad idea. Ostensibly the bonus exists to reward an employee for referring someone into a job. All it really does is distort the incentives in a way that can’t possibly be good.</p>
-
-<p>Following is a list of reasons I want an employee of mine referring someone to my company:</p>
-
-<ol>
-  <li>The person being referred is beyond awesome at what they do and we’d be fools not to hire them.</li>
-  <li>Did you not read #1?</li>
-</ol>
-
-<p>When I hold a $10,000 gun to the referrer’s head I’m distracting them from that <strong>one</strong> simple reason. When there’s no bonus involved there are people the employee will refer and people they won’t. With the money hanging out there a third category of people opens up: people the employee will refer if they can get $10,000. This third category is made up completely from the people the employee wouldn’t have referred if the bonus didn’t exist. I don’t want any of these people in the third category.</p>
-
-<p>The absolute <strong>last</strong> thing I want to do is turn my employees into contingency recruiters and that’s exactly what the referral bonus does.</p>
-
-<p>So if referral bonuses aren’t right how <em>do</em> you get your employees to refer great talent to the company and the company to great talent?  Make your company such an awesome place to be and work that your employees naturally want to do that.  Figure out what your employees want and then <strong>give it to them</strong>.  Great health care, free lunch, 20% time…whatever.  They’ll be so happy with you that they won’t be able to contain themselves when they find out a friend is looking for a job.</p>
-
-<p>If you want to hear my thoughts on some of the responses to this post, read my follow up <a href="/blog/2012/05/12/employee-referral-bonuses-are-pants-on-head-stupid-follow-up/">here</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/3">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -883,6 +918,10 @@ Jason Punyon aka “The Big Green J”</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/12/08/fun-with-random-numbers-more-random-projection/">Fun With Random Numbers: More Random Projection</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/12/02/fun-with-random-numbers-random-projection/">Fun With Random Numbers: Random Projection</a>
       </li>
     
@@ -896,10 +935,6 @@ Jason Punyon aka “The Big Green J”</p>
     
       <li class="post">
         <a href="/blog/2015/02/10/providence-architecture-and-performance/">Providence: Architecture and Performance</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/02/05/providence-testing-and-results/">Providence: Testing and Results</a>
       </li>
     
   </ul>

@@ -6,7 +6,7 @@ comments: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache=TRUE, fig.width=15, fig.height = 10)
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height = 10)
 library(tidyverse)
 library(scatterD3)
 library(viridis)
@@ -39,7 +39,7 @@ jason_colors = function(numberOfColors) {
 }
 ```
 
-Last time, we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of dimensions required to preserve the distance between the points in a set is dependent only upon the number of *points* in the set and the maximum acceptable distortion set by the user. Surprisingly it does *not* depend on the original number of dimensions. The proof that random projections work is hard to understand, but the method is very simple to implement in just a few steps. To reduce the dimensionality of a set of m points in an N dimensional space:
+[Last time](http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/) we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of dimensions required to preserve the distance between the points in a set is dependent only upon the number of *points* in the set and the maximum acceptable distortion set by the user. Surprisingly it does *not* depend on the original number of dimensions. The proof that random projections work is hard to understand, but the method is very simple to implement in just a few steps. To reduce the dimensionality of a set of m points in an N dimensional space:
 
 1. Get your data into a m &times; N matrix **D**
 1. Choose your maximum allowable percent distortion &epsilon;

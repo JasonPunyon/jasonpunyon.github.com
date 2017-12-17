@@ -7,7 +7,7 @@ comments: true
 
 
 
-Last time, we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of dimensions required to preserve the distance between the points in a set is dependent only upon the number of *points* in the set and the maximum acceptable distortion set by the user. Surprisingly it does *not* depend on the original number of dimensions. The proof that random projections work is hard to understand, but the method is very simple to implement in just a few steps. To reduce the dimensionality of a set of m points in an N dimensional space:
+[Last time](http://jasonpunyon.com/blog/2017/12/02/fun-with-random-numbers-random-projection/) we learned about a method of dimensionality reduction called random projection. We showed that using random projection, the number of dimensions required to preserve the distance between the points in a set is dependent only upon the number of *points* in the set and the maximum acceptable distortion set by the user. Surprisingly it does *not* depend on the original number of dimensions. The proof that random projections work is hard to understand, but the method is very simple to implement in just a few steps. To reduce the dimensionality of a set of m points in an N dimensional space:
 
 1. Get your data into a m &times; N matrix **D**
 1. Choose your maximum allowable percent distortion &epsilon;
@@ -68,13 +68,13 @@ projected[1,]
 
 
 {% highlight text %}
-##  [1]  10.69272814   5.85547523  -2.69259970  11.69982579  -8.09947221
-##  [6]   9.73387187  -6.21878316   8.23639838  -0.04556335  -8.63407293
-## [11]   5.86008396  14.05194007   3.21997116  11.88770012  -3.49988214
-## [16]  -8.06132757 -15.38181868  10.03085341  -3.45489811   8.37602080
-## [21]   1.60290140   4.04197519   1.06388562   9.57580297   1.93319542
-## [26]   3.26073281  -1.43515837  -4.95111631  -1.47457978  -2.04400312
-## [31]  -0.62328955   3.22069399
+##  [1]  -8.5298772   5.2487328   6.4803452   0.7202221  -4.5681409
+##  [6]  -3.5437398  -1.1376153   2.1322984 -13.9543986   9.5068033
+## [11]  11.9501116   4.1434071  -6.2996788  -2.8503986   3.0405665
+## [16]  -6.8101166   2.4264599  -0.4621604 -13.5103668  -7.4556873
+## [21]  11.0385507   3.5353682  -3.1107269   0.5312211   6.7301643
+## [26]   5.3124139   2.1059562   1.6779630   2.7099141  13.2124557
+## [31]   3.0985446  -2.9377113
 {% endhighlight %}
 
 OK, so each row in the projected matrix has 32 numbers. The next step in the process is to turn each row of 32 numbers into 32 bits using their signs. Positive numbers will map to 1s and negative numbers will map to 0s.
@@ -88,7 +88,7 @@ projected_bits[1,] ##And now we have 1s and 0s
 
 
 {% highlight text %}
-##  [1] 1 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 0 1 0 1 1 1 1 1 1 1 0 0 0 0 0 1
+##  [1] 0 1 1 1 0 0 0 1 0 1 1 1 0 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 1 1 1 0
 {% endhighlight %}
 
 Our projected data is now a collection of 32-bit strings, which I'm going to call hashes. Let's visualize the data by coloring the points on the original map by their projected hashes.

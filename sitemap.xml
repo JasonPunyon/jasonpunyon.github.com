@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://jasonpunyon.com/blog/2018/01/24/gratitude/</loc>
+<lastmod>2018-01-24T00:37:24-05:00</lastmod>
+</url>
+<url>
 <loc>http://jasonpunyon.com/blog/2017/12/08/fun-with-random-numbers-more-random-projection/</loc>
 <lastmod>2017-12-08T13:51:52-05:00</lastmod>
 </url>
@@ -85,10 +89,10 @@
 <lastmod>2012-05-11T06:59:00-04:00</lastmod>
 </url>
 <url>
-<loc>http://jasonpunyon.com/blog/archives/</loc>
+<loc>http://jasonpunyon.com/</loc>
 </url>
 <url>
-<loc>http://jasonpunyon.com/</loc>
+<loc>http://jasonpunyon.com/blog/archives/</loc>
 </url>
 <url>
 <loc>http://jasonpunyon.com/blog/categories/hiring/</loc>

@@ -4,7 +4,7 @@
   <title><![CDATA[Jason Punyon]]></title>
   <link href="http://jasonpunyon.com/atom.xml" rel="self"/>
   <link href="http://jasonpunyon.com/"/>
-  <updated>2017-12-17T11:51:01-05:00</updated>
+  <updated>2018-01-24T00:57:05-05:00</updated>
   <id>http://jasonpunyon.com/</id>
   <author>
     <name><![CDATA[Jason Punyon]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Gratitude]]></title>
+    <link href="http://jasonpunyon.com/blog/2018/01/24/gratitude/"/>
+    <updated>2018-01-24T00:37:24-05:00</updated>
+    <id>http://jasonpunyon.com/blog/2018/01/24/gratitude</id>
+    <content type="html"><![CDATA[<p>I’ve been meditating lately. I started in December, and I haven’t done it every day, but I enjoy it. The topic of this morning’s meditation was gratitude. It led me through feeling grateful for different things. Something someone did for me. Something someone I don’t know did. Something from nature. Something I did. Something small. Something big.</p>
+
+<p>My task for the week was to deploy an A/B test of a new job recommendation algorithm. Our weekly meeting was at 1PM so it was high time I got down to it. I had to train a logistic regression model in R, extract the coefficients/port them to our C# library, and release an update. I didn’t know how to do any of that R work or ML stuff three years ago. I was grateful.</p>
+
+<p>Then I had to update the consuming code. I worked on this codebase before I moved to the Data Team. You never step in the same river twice, but I know this river. I’ve never been around anything I’ve built for more than a few years, getting to see it grow and change, work and not work. I was grateful.</p>
+
+<p>I stepped in it and released a decent size bug for unregistered users to dev, the site would just error out for them. It hadn’t happened locally, so I had to work from the stack traces and I got to THINK REALLY HARD (it’s an older technique, but it checks out). I used to worry I was going to get bit by bugs. I stopped worrying, I know I’m going to get bit by bugs, but also bug bites just aren’t that bad anymore. I was grateful.</p>
+
+<p>This took a while and I told everyone on the team that I had really loused things up and if they would be so kind as not to push prod so I could figure out what was up. Gervasio, one of the devs on the team, showed me this neat way they can block the builds so even if someone ran the build anyway it wouldn’t deploy. I was grateful.</p>
+
+<p>I finally worked out the hitch in the giddyup, and with about ten minutes to spare before the meeting my test was galloping free in the wild. I trained a model, touched two languages, three codebases, fucked up the release, and fixed it all in a matter of hours. I was grateful.</p>
+
+<p>This mundane cromulence. Why even mark it with words? A few months back we had to let a lot of people go. It was a thing I was scared of for a long time before that and ashamed of since. Gratitude is a piece of the puzzle I’ve been missing. Remembering that I contributed to building the experience I had developing today and feeling grateful for being a part of that lifted me up. Some things we set in motion years ago didn’t work out like we thought and that is sad, but some have so exceeded my expectations. I haven’t been grateful about work in a long time and it was nice to be there today. I want to be there tomorrow.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Fun With Random Numbers: More Random Projection]]></title>
@@ -1547,35 +1568,6 @@ Jason Punyon aka “The Big Green J”</p>
 <h3 id="also">Also…</h3>
 
 <p>If you think Stack Exchange is the place for you please don’t hesitate to apply, you might surprise yourself. We’re currently looking for a <a href="http://careers.stackoverflow.com/jobs/16279">few sharp devs</a> to join the team in New York and a <a href="http://careers.stackoverflow.com/jobs/19463">search architect</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Employee Referral Bonuses Are Pants on Head Stupid: Follow Up]]></title>
-    <link href="http://jasonpunyon.com/blog/2012/05/12/employee-referral-bonuses-are-pants-on-head-stupid-follow-up/"/>
-    <updated>2012-05-12T11:01:00-04:00</updated>
-    <id>http://jasonpunyon.com/blog/2012/05/12/employee-referral-bonuses-are-pants-on-head-stupid-follow-up</id>
-    <content type="html"><![CDATA[<p>In my <a href="http://jasonpunyon.com/blog/2012/05/11/employee-referral-bonuses-are-pants-on-head-stupid/">previous post</a> I outlined one reason why I think employee referral bonuses aren’t good: They distort the incentives for referring someone into the company in a way that can’t possibly be good. First off, my thanks go out to everyone who read that post. Some people refuted my argument in various ways and I thought I’d take a look at a couple of them.</p>
-
-<h3 id="refutation-the-first-bonus-size-matters">Refutation The First: Bonus Size Matters</h3>
-
-<p>This is correct. I was working under the scenario of the <a href="http://jzhwu.blogspot.com/2012/05/im-former-miso-engineer-and-founders.html">miso article</a> where the bonus was $10,000. The size of the bonus absolutely matters. The bonus can’t distort any incentives if it’s too small for people to care about. But that’s the problem then. It’s too small for people to care about. The promise of $500 ($350 after taxes?) six months from hire date is not enough to divert your employee’s attention from their primary responsibilities to do this recruiting work for you.</p>
-
-<p>If you also use contingency recruiters (you shouldn’t, but I realize companies still do) another problem that might exist with relatively small referral bonuses is you can’t simultaneously have GIANT contingency recruiter fees that your employees know about. If a contingency recruiter gets $25K on a $100K salaried worker when your employee gets $500 or $1000 for the same kind of referral your employee is going to see the dissonance there and be unhappy.</p>
-
-<p>Another dissonance your employees might see is that the company says things like “We are 100% dedicated to finding great talent. It is #1 with a bullet on our list of priorities” and then you pay out $500 for a referral. It just doesn’t jive.</p>
-
-<h3 id="refutation-the-second-risk-vs-reward">Refutation The Second: Risk vs. Reward</h3>
-
-<p>Another popular thought was that referring someone to the company carries with it the inherent risk that the hire doesn’t work out. When the hire doesn’t work out it’s the referrer that would be “blamed” for the failure and that the bonus compensates them for that risk. This was interesting and I have to admit that I didn’t consider framing the issue like this at all.</p>
-
-<p>Your employee who refers a potential hire doesn’t get the bonus until the potential hire is hired and stays for a honeymoon period of 3 or 6 months.  The honeymoon period is there to protect the company from paying out a bonus and then having the new hire quit after 3 weeks. So when the new hire doesn’t work out during the honeymoon period, the referrer gets both the “blame” <strong>and</strong> no bonus. The bonus can’t possibly compensate them for any risk during the honeymoon period.</p>
-
-<p>The honeymoon period simultaneously sends the message “Once the new hire makes it out of the honeymoon period, we’re happy with your referral performance. Let’s celebrate with some rewards.”  If the new hire makes it out of the period, and then something doesn’t work out, the company <em>can’t</em> with a straight face blame the referrer for anything. It’s simply schizophrenic. If you’re doing it right, there isn’t any blame risk to compensate them for after the honeymoon period is over.</p>
-
-<p>So during the honeymoon period the referrer can’t possibly be compensated for the risk, and after the honeymoon period there isn’t any risk for which to compensate the referrer if the company isn’t being schizophrenic.</p>
-
-<p>Side note: This analysis was done under the pretense that there’s this blame game being played. If there’s any of this going on at all there is a <strong>serious</strong> problem that needs to be remedied immediately. The company can’t attach this nebulous liability to the referrer for a person <em>the company</em> hired. The company should still put the referred candidate through their paces in the interview process and prove to themselves that the recommendation was justified. In doing so the company can’t possibly place blame at the foot of the referrer for providing what is essentially an introduction.</p>
 ]]></content>
   </entry>
   
